@@ -1,0 +1,109 @@
+@import 'tailwindcss' source(none);
+@plugin '@tailwindcss/typography';
+
+@source '../';
+@source '../../config';
+@source '../../plugins';
+@source '../../src';
+
+/* Dark mode is toggled manually via a `.dark` class on <html> (see theme.js) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", "Hiragino Sans",
+    "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* PicoRuby brand red (picoruby.org navbar / accent color: #e60033) */
+  --color-brand-50: #fef2f3;
+  --color-brand-100: #fde3e5;
+  --color-brand-200: #fbccd0;
+  --color-brand-300: #f7a3aa;
+  --color-brand-400: #f16d78;
+  --color-brand-500: #e60033;
+  --color-brand-600: #c8002c;
+  --color-brand-700: #9e0021;
+  --color-brand-800: #7a001a;
+  --color-brand-900: #5c0014;
+  --color-brand-950: #3d000d;
+
+  /* PicoRuby secondary blue accent (picoruby.org links/active states: #248ec2) */
+  --color-accent-50: #eef8fc;
+  --color-accent-100: #dcf0f8;
+  --color-accent-200: #b9e1f1;
+  --color-accent-300: #8ccde6;
+  --color-accent-400: #57b0d4;
+  --color-accent-500: #248ec2;
+  --color-accent-600: #1c72a0;
+  --color-accent-700: #185c80;
+  --color-accent-800: #164a67;
+  --color-accent-900: #143e56;
+  --color-accent-950: #0b2738;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    @apply bg-white text-neutral-800 antialiased dark:bg-neutral-950 dark:text-neutral-200;
+  }
+
+  code,
+  pre,
+  kbd,
+  samp {
+    font-family: var(--font-mono);
+  }
+
+  ::selection {
+    @apply bg-brand-500/20 text-brand-700 dark:bg-brand-400/30 dark:text-brand-200;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-brand-500;
+  }
+}
+
+@layer components {
+  /* Slim scrollbars for the sidebar & on-this-page columns */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-neutral-300) transparent;
+  }
+
+  .dark .scrollbar-thin {
+    scrollbar-color: var(--color-neutral-700) transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: var(--color-neutral-300);
+    border-radius: 9999px;
+  }
+
+  .dark .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: var(--color-neutral-700);
+  }
+
+  /* Inline `code` chip inside docs prose. Scoped to `:not(pre) > code` so it
+     doesn't also paint a background behind every line of a fenced code
+     block's syntax-highlighted `pre > code` (Tailwind Typography's
+     `prose-code:*` modifiers can't express that exclusion on their own). */
+  .prose :where(:not(pre) > code) {
+    background-color: var(--color-neutral-100);
+    border-radius: 0.25rem;
+    padding-inline: 0.35em;
+    padding-block: 0.15em;
+  }
+
+  .dark .prose :where(:not(pre) > code) {
+    background-color: var(--color-neutral-800);
+  }
+}

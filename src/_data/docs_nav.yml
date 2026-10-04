@@ -1,0 +1,39 @@
+# Sidebar structure & prev/next order for the `docs` collection.
+#
+# Each top-level entry is a section (translated via `nav.sections.<id>`).
+# A section's `items` are either leaf pages (`slug:`, title comes from the
+# page's own front matter) or nested groups (`id:` + `items:`, translated
+# the same way as sections). Only one level of nesting is used today, but
+# `_partials/_docs_nav_items.erb` renders this recursively.
+
+- id: getting_started
+  items:
+    - slug: introduction
+    - slug: quick-start
+
+- id: build
+  items:
+    - slug: why-build
+    - slug: environment-setup
+    - slug: settings
+    - slug: target-setup
+    - slug: file-transfer
+    - slug: build
+
+- id: run
+  items:
+    - slug: flashing
+    - slug: monitoring
+    - slug: debugging
+
+- id: advanced
+  items:
+    - slug: wifi
+    - slug: heap-size
+    - slug: stack-size
+    - slug: partitions
+    - slug: qemu
+
+- id: devices
+  items:
+    - slug: supported-devices

@@ -1,0 +1,13 @@
+<footer data-pagefind-ignore class="border-t border-neutral-200 dark:border-neutral-800">
+  <div class="mx-auto flex max-w-screen-2xl flex-col items-center gap-3 px-6 py-8 text-sm text-neutral-500 dark:text-neutral-400 sm:flex-row sm:justify-between">
+    <p>
+      &copy; <%= Time.now.year %> the PicoRuby project ·
+      <%= t("footer.license") %>
+      <span class="hidden sm:inline">· <%= t("footer.built_with") %></span>
+    </p>
+    <div class="flex items-center gap-4">
+      <a href="<%= site.data.site_metadata.repo %>" class="hover:text-neutral-900 dark:hover:text-white"><%= t("nav.github") %></a>
+      <a href="<%= site.data.site_metadata.picoruby_site %>" class="hover:text-neutral-900 dark:hover:text-white">picoruby.org</a>
+    </div>
+  </div>
+</footer>

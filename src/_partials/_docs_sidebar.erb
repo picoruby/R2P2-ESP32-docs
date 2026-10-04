@@ -1,0 +1,10 @@
+<nav aria-label="Docs" class="space-y-6 px-4 py-6 text-sm lg:px-3">
+  <% site.data.docs_nav.each do |section| %>
+  <div>
+    <p class="px-3 text-xs font-semibold uppercase tracking-wide text-neutral-400 dark:text-neutral-500">
+      <%= t("nav.sections.#{section.id}") %>
+    </p>
+    <%= partial "docs_nav_items", items: section.items, depth: 0 %>
+  </div>
+  <% end %>
+</nav>

@@ -1,0 +1,28 @@
+<%
+# Locals: items (Array), depth (Integer, 0 = top-level pages directly under
+# a section, 1+ = pages inside a nested group).
+depth ||= 0
+%>
+<ul class="mt-2 space-y-0.5 <%= "ps-3" if depth > 0 %>">
+  <% items.each do |item| %>
+  <% if item.slug %>
+  <% doc = find_doc(site, item.slug, site.locale) %>
+  <% next unless doc %>
+  <% active = item.slug == data.slug %>
+  <li>
+    <a
+      href="<%= relative_url doc %>"
+      <% if active %>aria-current="page"<% end %>
+      class="block rounded-md px-3 py-1.5 <% if active %>bg-brand-50 font-medium text-brand-700 dark:bg-brand-500/10 dark:text-brand-300<% else %>text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-white<% end %>"
+    ><%= doc.data.title %></a>
+  </li>
+  <% else %>
+  <li class="pt-3 first:pt-0">
+    <p class="px-3 text-xs font-medium text-neutral-500 dark:text-neutral-400">
+      <%= t("nav.sections.#{item.id}") %>
+    </p>
+    <%= partial "docs_nav_items", items: item.items, depth: depth + 1 %>
+  </li>
+  <% end %>
+  <% end %>
+</ul>

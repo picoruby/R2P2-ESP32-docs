@@ -1,0 +1,147 @@
+---
+layout: default
+---
+
+<section class="relative overflow-hidden">
+  <div class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_60%_50%_at_50%_-10%,var(--color-brand-100),transparent)] dark:bg-[radial-gradient(ellipse_60%_50%_at_50%_-10%,var(--color-brand-950),transparent)]"></div>
+
+  <div class="relative mx-auto max-w-screen-xl px-6 pb-16 pt-12 sm:pt-16">
+    <div class="mx-auto max-w-3xl text-center">
+      <span class="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-brand-50 px-5 py-2 text-base font-semibold sm:text-lg text-brand-700 dark:border-brand-900 dark:bg-brand-500/10 dark:text-brand-300">
+        <%= t("home.hero.eyebrow") %>
+      </span>
+
+      <h1 class="mt-6 text-5xl font-bold tracking-tighter text-neutral-900 dark:text-white sm:text-7xl">
+        <%= t("home.hero.title") %>
+      </h1>
+
+      <p class="mx-auto mt-6 max-w-2xl text-xl text-neutral-600 dark:text-neutral-300">
+        <%= t("home.hero.description") %>
+      </p>
+
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+        <a
+          href="<%= relative_url in_locale("/docs/quick-start/", site.locale) %>"
+          class="inline-flex items-center gap-2 rounded-md bg-brand-500 px-9 py-4 text-base font-semibold text-white shadow-sm hover:bg-brand-600"
+        >
+          <%= t("home.hero.cta_primary") %>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a
+          href="<%= site.data.site_metadata.repo %>"
+          class="inline-flex items-center gap-2 rounded-md border border-neutral-300 px-9 py-4 text-base font-semibold text-neutral-700 hover:bg-neutral-50 dark:border-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-900"
+        >
+          <%= t("home.hero.cta_secondary") %>
+        </a>
+      </div>
+    </div>
+
+    <div class="relative mx-auto mt-12 max-w-5xl">
+      <div class="overflow-hidden rounded-2xl border border-neutral-800 bg-[#18181b] shadow-2xl shadow-brand-500/10">
+        <div class="flex items-center gap-1.5 border-b border-white/10 px-4 py-3">
+          <span class="size-2.5 rounded-full bg-[#ff5f56]"></span>
+          <span class="size-2.5 rounded-full bg-[#ffbd2e]"></span>
+          <span class="size-2.5 rounded-full bg-[#27c93f]"></span>
+          <span class="ms-2 font-mono text-xs text-neutral-500">picoruby-shell</span>
+        </div>
+        <pre class="overflow-x-auto p-8 font-mono text-base leading-8 sm:text-lg sm:leading-9 text-neutral-200"><code><span class="text-neutral-500">$&gt;</span> irb
+<span class="text-neutral-500">irb&gt;</span> words = [<span class="text-[#c3e88d]">"Hello"</span>, <span class="text-[#c3e88d]">"PicoRuby"</span>, <span class="text-[#c3e88d]">"!"</span>]
+=&gt; [<span class="text-[#c3e88d]">"Hello"</span>, <span class="text-[#c3e88d]">"PicoRuby"</span>, <span class="text-[#c3e88d]">"!"</span>]
+<span class="text-neutral-500">irb&gt;</span> words.join(<span class="text-[#c3e88d]">" "</span>)
+=&gt; <span class="text-[#c3e88d]">"Hello PicoRuby !"</span>
+<span class="text-neutral-500">irb&gt;</span> <span class="animate-pulse">▏</span></code></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="mx-auto max-w-screen-xl px-6 py-16 sm:py-24">
+  <div class="mx-auto max-w-2xl text-center">
+    <h2 class="text-3xl font-bold tracking-tight text-neutral-900 dark:text-white sm:text-4xl"><%= t("home.steps.title") %></h2>
+    <p class="mt-4 text-lg text-neutral-600 dark:text-neutral-300"><%= t("home.steps.description") %></p>
+  </div>
+  <ol class="mt-12 grid gap-6 md:grid-cols-3">
+    <% t("home.steps.items").each_with_index do |step, i| %>
+    <li class="relative rounded-2xl border border-neutral-200 p-6 dark:border-neutral-800">
+      <span class="flex size-10 items-center justify-center rounded-full bg-brand-500 text-base font-bold text-white"><%= i + 1 %></span>
+      <h3 class="mt-4 text-xl font-semibold text-neutral-900 dark:text-white"><%= step[:title] %></h3>
+      <p class="mt-2 text-base text-neutral-500 dark:text-neutral-400"><%= step[:description] %></p>
+      <a href="<%= relative_url in_locale(step[:href], site.locale) %>" class="mt-4 inline-block text-base font-medium text-brand-600 hover:underline dark:text-brand-400"><%= step[:link] %> &rarr;</a>
+    </li>
+    <% end %>
+  </ol>
+</section>
+
+<section class="border-t border-neutral-200 bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-900/40">
+  <div class="mx-auto max-w-screen-xl px-6 py-16 sm:py-24">
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <% t("home.features").each do |feature| %>
+      <div class="rounded-2xl border border-neutral-200 bg-white p-6 dark:border-neutral-800 dark:bg-neutral-950">
+        <h3 class="text-xl font-semibold text-neutral-900 dark:text-white"><%= feature[:title] %></h3>
+        <p class="mt-2 text-base text-neutral-500 dark:text-neutral-400"><%= feature[:description] %></p>
+      </div>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<section class="border-t border-neutral-200 dark:border-neutral-800">
+  <div class="mx-auto max-w-screen-xl px-6 py-16 sm:py-24">
+    <div class="grid gap-12 lg:grid-cols-2">
+      <div>
+        <h2 class="text-3xl font-bold tracking-tight text-neutral-900 dark:text-white sm:text-4xl"><%= t("home.targets.title") %></h2>
+        <p class="mt-4 text-lg text-neutral-600 dark:text-neutral-300"><%= t("home.targets.description") %></p>
+        <div class="mt-6 flex flex-wrap gap-2">
+          <% %w[ESP32 ESP32-C3 ESP32-C6 ESP32-H2 ESP32-P4 ESP32-S3].each do |chip| %>
+          <span class="rounded-full border border-neutral-300 px-4 py-1.5 font-mono text-base text-neutral-700 dark:border-neutral-700 dark:text-neutral-300"><%= chip %></span>
+          <% end %>
+        </div>
+        <a href="<%= relative_url in_locale("/docs/supported-devices/", site.locale) %>" class="mt-5 inline-block text-base font-medium text-brand-600 hover:underline dark:text-brand-400"><%= t("home.targets.link") %> &rarr;</a>
+      </div>
+      <div>
+        <h2 class="text-3xl font-bold tracking-tight text-neutral-900 dark:text-white sm:text-4xl"><%= t("home.vms.title") %></h2>
+        <p class="mt-4 text-lg text-neutral-600 dark:text-neutral-300"><%= t("home.vms.description") %></p>
+        <dl class="mt-6 space-y-4">
+          <% t("home.vms.items").each do |vm| %>
+          <div class="rounded-2xl border border-neutral-200 p-4 dark:border-neutral-800">
+            <dt class="text-xl font-semibold text-neutral-900 dark:text-white"><%= vm[:name] %></dt>
+            <dd class="mt-1 text-base text-neutral-500 dark:text-neutral-400"><%= vm[:description] %></dd>
+          </div>
+          <% end %>
+        </dl>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="border-t border-neutral-200 bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-900/40">
+  <div class="mx-auto max-w-screen-xl px-6 py-16 sm:py-24">
+    <h2 class="text-center text-3xl font-bold tracking-tight text-neutral-900 dark:text-white sm:text-4xl"><%= t("home.explore.title") %></h2>
+    <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <% t("home.explore.items").each do |item| %>
+      <a href="<%= relative_url in_locale(item[:href], site.locale) %>" class="group rounded-2xl border border-neutral-200 bg-white p-6 transition hover:border-brand-500 dark:border-neutral-800 dark:bg-neutral-950 dark:hover:border-brand-500">
+        <h3 class="text-xl font-semibold text-neutral-900 group-hover:text-brand-600 dark:text-white dark:group-hover:text-brand-400"><%= item[:title] %> &rarr;</h3>
+        <p class="mt-2 text-base text-neutral-500 dark:text-neutral-400"><%= item[:description] %></p>
+      </a>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<section class="text-center">
+<div class="mx-auto max-w-screen-xl px-6 py-16 sm:py-24">
+  <h2 class="text-3xl font-bold tracking-tight text-neutral-900 dark:text-white sm:text-4xl">
+    <%= t("home.docs_cta.title") %>
+  </h2>
+  <p class="mx-auto mt-4 max-w-xl text-lg text-neutral-600 dark:text-neutral-300">
+    <%= t("home.docs_cta.description") %>
+  </p>
+  <a
+    href="<%= relative_url in_locale("/docs/quick-start/", site.locale) %>"
+    class="mt-6 inline-flex items-center gap-2 rounded-md bg-neutral-900 px-9 py-4 text-base font-semibold text-white hover:bg-neutral-700 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200"
+  >
+    <%= t("home.docs_cta.button") %>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+  </a>
+</div>
+</section>

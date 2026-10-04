@@ -1,0 +1,10 @@
+# Non-localized site metadata. Localized strings (title, tagline,
+# description, nav labels, etc.) live in `src/_locales/{en,ja}.yml` and are
+# accessed with the `t` helper, e.g. `t "site.title"`.
+
+repo: https://github.com/picoruby/R2P2-ESP32
+repo_edit_base: https://github.com/picoruby/R2P2-ESP32-docs/edit/main/src
+picoruby_site: https://picoruby.org
+web_installer: https://picoruby.org/R2P2-ESP32-installer/
+web_terminal: https://picoruby.org/terminal
+# og_image: /images/og-image.png # TODO: add a real social preview image, then uncomment

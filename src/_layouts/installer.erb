@@ -1,0 +1,101 @@
+---
+layout: default
+---
+
+<div class="mx-auto max-w-2xl px-6 py-16">
+  <div class="text-center">
+    <h1 class="text-3xl font-bold tracking-tight text-neutral-900 dark:text-white">
+      <%= t("installer.title") %>
+    </h1>
+    <p class="mt-3 text-lg text-neutral-500 dark:text-neutral-400">
+      <%= t("installer.subtitle") %>
+    </p>
+  </div>
+
+  <div class="mt-10 rounded-xl border-s-4 border-brand-500 bg-brand-50 p-5 dark:bg-brand-500/10">
+    <h2 class="font-semibold text-neutral-900 dark:text-white"><%= t("installer.prerequisites_title") %></h2>
+    <ul class="mt-2 list-disc space-y-1 ps-5 text-sm text-neutral-600 dark:text-neutral-300">
+      <% t("installer.prerequisites").each do |item| %>
+      <li><%= item %></li>
+      <% end %>
+    </ul>
+  </div>
+
+  <div class="mt-6 rounded-xl border border-neutral-200 p-6 dark:border-neutral-800">
+    <h2 class="text-lg font-semibold text-neutral-900 dark:text-white"><%= t("installer.select_firmware_title") %></h2>
+
+    <p
+      data-installer-status
+      data-state="loading"
+      data-loaded-template="<%= t("installer.status.loaded") %>"
+      data-error-template="<%= t("installer.status.error") %>"
+      class="mt-2 text-sm text-neutral-500 data-[state=error]:text-red-600 data-[state=loaded]:text-green-700 dark:text-neutral-400 dark:data-[state=error]:text-red-400 dark:data-[state=loaded]:text-green-400"
+    ><%= t("installer.status.loading") %></p>
+
+    <div data-installer-selects class="hidden mt-4 space-y-4">
+      <div class="flex items-center gap-4">
+        <label for="installer-board" class="w-32 shrink-0 text-sm font-medium text-neutral-700 dark:text-neutral-300">
+          <%= t("installer.board_label") %>
+        </label>
+        <select
+          id="installer-board"
+          data-installer-board
+          class="w-full max-w-xs rounded-lg border border-neutral-300 bg-white px-3 py-1.5 text-sm text-neutral-800 focus:border-brand-500 focus:outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200"
+        ></select>
+      </div>
+      <div class="flex items-center gap-4">
+        <label for="installer-ruby" class="w-32 shrink-0 text-sm font-medium text-neutral-700 dark:text-neutral-300">
+          <%= t("installer.ruby_label") %>
+        </label>
+        <select
+          id="installer-ruby"
+          data-installer-ruby
+          class="w-full max-w-xs rounded-lg border border-neutral-300 bg-white px-3 py-1.5 text-sm text-neutral-800 focus:border-brand-500 focus:outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200"
+        ></select>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-6 rounded-xl border border-neutral-200 p-6 text-center dark:border-neutral-800">
+    <h2 class="text-lg font-semibold text-neutral-900 dark:text-white"><%= t("installer.flash_title") %></h2>
+    <esp-web-install-button data-installer-button class="mt-4 inline-block">
+      <button
+        slot="activate"
+        type="button"
+        class="inline-flex items-center gap-2 rounded-lg bg-brand-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-600"
+      >
+        <%= t("installer.connect_button") %>
+      </button>
+      <p slot="unsupported" class="max-w-sm text-sm text-red-600 dark:text-red-400">
+        <%= t("installer.unsupported") %>
+      </p>
+      <p slot="not-allowed" class="max-w-sm text-sm text-red-600 dark:text-red-400">
+        <%= t("installer.not_allowed") %>
+      </p>
+    </esp-web-install-button>
+  </div>
+
+  <div class="mt-6 rounded-xl bg-neutral-50 p-6 text-center dark:bg-neutral-900/50">
+    <h2 class="font-semibold text-neutral-900 dark:text-white"><%= t("installer.after_title") %></h2>
+    <p class="mx-auto mt-2 max-w-sm text-sm text-neutral-600 dark:text-neutral-300"><%= t("installer.after_body") %></p>
+    <a
+      href="<%= site.data.site_metadata.web_terminal %>"
+      class="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300"
+    ><%= t("installer.open_terminal") %></a>
+  </div>
+
+  <p class="mt-8 text-center text-sm">
+    <a
+      href="<%= relative_url in_locale("/docs/why-build/", site.locale) %>"
+      class="text-neutral-500 hover:text-neutral-800 dark:text-neutral-400 dark:hover:text-neutral-200"
+    ><%= t("installer.docs_cta") %></a>
+  </p>
+
+  <div class="mt-10 border-t border-neutral-200 pt-6 text-center text-xs text-neutral-400 dark:border-neutral-800 dark:text-neutral-500">
+    <p>
+      <%= t("installer.footer_powered_by") %>
+      <a href="https://esphome.github.io/esp-web-tools/" class="underline hover:text-neutral-600 dark:hover:text-neutral-300">ESP Web Tools</a>
+    </p>
+    <p class="mt-1"><%= t("installer.footer_tagline") %></p>
+  </div>
+</div>

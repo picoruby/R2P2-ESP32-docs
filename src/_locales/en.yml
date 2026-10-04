@@ -1,0 +1,165 @@
+en:
+  site:
+    title: R2P2-ESP32 Docs
+    tagline: PicoRuby on ESP32
+    description: >-
+      Documentation for R2P2-ESP32 — running R2P2, a PicoRuby shell, directly
+      on ESP32 microcontrollers.
+
+  nav:
+    docs: Docs
+    installer: Installer
+    github: GitHub
+    home: Home
+    sections:
+      getting_started: Getting Started
+      build: Build It Yourself
+      environment_setup: Environment Setup
+      run: Run
+      advanced: Advanced Usage
+      devices: Devices
+
+  header:
+    search_placeholder: Search docs...
+    search_no_results: No results found
+    search_unavailable: Search is temporarily unavailable
+    toggle_theme: Toggle color theme
+    switch_language: Switch language
+    open_menu: Open menu
+    close_menu: Close menu
+
+  sidebar:
+    on_this_page: On this page
+
+  pagination:
+    previous: Previous
+    next: Next
+
+  footer:
+    edit_page: Edit this page on GitHub
+    license: Released under the MIT License.
+    built_with: Built with Bridgetown & Tailwind CSS.
+
+  home:
+    hero:
+      eyebrow: PicoRuby × ESP32
+      title: Run Ruby directly on your ESP32
+      description: >-
+        R2P2-ESP32 brings R2P2 — a PicoRuby shell — to ESP32 microcontrollers.
+        Flash it from your browser and start writing Ruby on real hardware in
+        minutes.
+      cta_primary: Get started
+      cta_secondary: View on GitHub
+    features:
+      - title: Flash from your browser
+        description: >-
+          No toolchain required to get started — flash prebuilt firmware
+          straight from the Web Installer.
+      - title: A full Ruby REPL
+        description: >-
+          Drop into irb on-device and explore the picoruby-shell
+          interactively, right over the wire.
+      - title: Multiple ESP32 targets
+        description: >-
+          Supports ESP32, ESP32-C3, ESP32-C6, ESP32-H2, ESP32-P4 and
+          ESP32-S3 boards.
+      - title: Open source
+        description: >-
+          Built on PicoRuby, the smallest Ruby implementation for one-chip
+          microcontrollers.
+    steps:
+      title: From zero to Ruby in three steps
+      description: >-
+        You don't need to install anything to try it out.
+      items:
+        - title: Flash
+          description: >-
+            Pick your chip in the Web Installer and write the prebuilt
+            firmware over USB.
+          link: Open the installer
+          href: /installer/
+        - title: Connect
+          description: >-
+            Open a serial console and you land in the R2P2 shell on your
+            board.
+          link: Monitoring guide
+          href: /docs/monitoring/
+        - title: Code
+          description: >-
+            Run irb, transfer scripts, and configure WiFi — all in Ruby, on
+            the device.
+          link: Quick start
+          href: /docs/quick-start/
+    targets:
+      title: Works across the ESP32 family
+      description: >-
+        Prebuilt images are published for these chips, with and without the
+        USB console where applicable.
+      link: See verified devices
+    vms:
+      title: Choose your Ruby VM
+      description: Both VMs are available on the boards that have enough memory.
+      items:
+        - name: FemtoRuby (mruby/c)
+          description: >-
+            The lightweight VM. Runs on every supported chip, including
+            boards without SPIRAM.
+        - name: PicoRuby (mruby)
+          description: >-
+            The fuller mruby-based VM, verified on ESP32-S3 boards.
+    explore:
+      title: Explore the docs
+      items:
+        - title: Getting Started
+          description: What R2P2-ESP32 is and how to run it in minutes.
+          href: /docs/introduction/
+        - title: Build It Yourself
+          description: Set up ESP-IDF, tweak settings, and build your own firmware.
+          href: /docs/why-build/
+        - title: Run
+          description: Flash, monitor, and debug your board.
+          href: /docs/flashing/
+        - title: Advanced Usage
+          description: WiFi, heap and stack size, partitions, and QEMU.
+          href: /docs/wifi/
+    docs_cta:
+      title: Ready to dive in?
+      description: >-
+        Follow the quick start guide to flash your board and run your first
+        Ruby program in minutes.
+      button: Read the docs
+
+  installer:
+    title: R2P2-ESP32 Web Installer
+    subtitle: Flash your ESP32 device directly from your browser — no toolchain required.
+    prerequisites_title: "Before you start:"
+    prerequisites:
+      - Connect your ESP32 board to your computer via USB
+      - Use Google Chrome, Microsoft Edge, or Opera (this tool needs Web Serial)
+      - Know your board's target chip and which VM you want, to pick below
+    select_firmware_title: Select firmware
+    board_label: Target
+    ruby_label: VM
+    status:
+      loading: Loading the latest release...
+      loaded: "Latest release: {version}"
+      error: "Failed to load release info: {message}"
+    flash_title: Flash firmware
+    connect_button: Connect and Flash
+    unsupported: >-
+      Your browser doesn't support Web Serial. Please open this page in
+      Google Chrome, Microsoft Edge, or Opera instead.
+    not_allowed: This tool requires HTTPS (or localhost).
+    after_title: After flashing
+    after_body: >-
+      Reset your device, then open the Web Terminal to start irb or run your
+      first Ruby program.
+    open_terminal: Open Web Terminal →
+    docs_cta: Prefer to build firmware yourself? See the docs →
+    footer_powered_by: Powered by
+    footer_tagline: R2P2-ESP32 — PicoRuby on ESP32
+
+  not_found:
+    title: Page not found
+    description: The page you're looking for doesn't exist or may have moved.
+    button: Back to home

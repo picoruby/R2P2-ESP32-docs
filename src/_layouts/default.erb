@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="<%= site.locale %>" class="scroll-pt-20">
+  <head>
+    <%= render "head" %>
+  </head>
+  <body class="flex min-h-screen flex-col bg-white text-neutral-800 dark:bg-neutral-950 dark:text-neutral-200">
+    <%= render "header" %>
+
+    <main class="flex-1">
+      <%= yield %>
+    </main>
+
+    <%= render "footer" %>
+  </body>
+</html>

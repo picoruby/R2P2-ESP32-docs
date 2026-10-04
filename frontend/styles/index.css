@@ -1,0 +1,37 @@
+/* Self-hosted fonts (no external requests). Japanese text falls back to the
+   OS's own Noto Sans JP / Hiragino stack declared in `--font-sans`, since
+   Inter only covers Latin/Cyrillic/Greek glyphs. */
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/500.css";
+@import "@fontsource/inter/600.css";
+@import "@fontsource/inter/700.css";
+@import "@fontsource/inter/800.css";
+@import "@fontsource/jetbrains-mono/400.css";
+@import "@fontsource/jetbrains-mono/500.css";
+
+@import "./syntax-highlighting.css";
+
+/* Small bits of behavior-driven CSS that are awkward to express as Tailwind
+   utility classes directly in markup (JS toggles these classes at runtime). */
+
+.toc-link[aria-current="true"] {
+  color: var(--color-brand-600);
+}
+
+.dark .toc-link[aria-current="true"] {
+  color: var(--color-brand-400);
+}
+
+.code-copy-button[data-copied="true"] svg[data-icon="copy"],
+.code-copy-button svg[data-icon="check"] {
+  display: none;
+}
+
+.code-copy-button[data-copied="true"] svg[data-icon="check"] {
+  display: block;
+}
+
+/* Hide content until Alpine-less mobile sidebar JS has initialized, to avoid a flash */
+[data-sidebar-panel] {
+  transition: transform 0.2s ease-in-out;
+}

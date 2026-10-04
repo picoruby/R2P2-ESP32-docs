@@ -1,0 +1,21 @@
+---
+permalink: /404.html
+layout: default
+title: 404
+---
+
+<div class="mx-auto flex max-w-screen-xl flex-col items-center px-6 py-28 text-center">
+  <p class="font-mono text-sm font-medium text-brand-500">404</p>
+  <h1 class="mt-3 text-3xl font-bold tracking-tight text-neutral-900 dark:text-white">
+    <%= t("not_found.title") %>
+  </h1>
+  <p class="mt-3 max-w-md text-neutral-500 dark:text-neutral-400">
+    <%= t("not_found.description") %>
+  </p>
+  <a
+    href="<%= relative_url '/' %>"
+    class="mt-8 inline-flex items-center gap-2 rounded-lg bg-brand-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-600"
+  >
+    <%= t("not_found.button") %>
+  </a>
+</div>

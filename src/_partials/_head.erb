@@ -1,0 +1,49 @@
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<% page_title = strip_html(strip_newlines(data.title.to_s)) %>
+<% is_home = page_title.empty? || page_title == "Index" %>
+<% display_title = is_home ? t("site.title") : page_title %>
+<title><%= display_title %><% if !is_home %> · <%= t("site.title") %><% else %> — <%= t("site.tagline") %><% end %></title>
+
+<meta name="description" content="<%= data.description || t("site.description") %>" />
+<meta name="theme-color" content="#e60033" />
+
+<% is_docs = resource.collection&.label.to_s == "docs" %>
+<% localeless_path = is_docs ? "/docs/#{data.slug}/" : "/" %>
+<link rel="canonical" href="<%= absolute_url resource %>" />
+<% other_locales(site, site.locale).each do |locale| %>
+<link rel="alternate" hreflang="<%= locale %>" href="<%= absolute_url in_locale(localeless_path, locale) %>" />
+<% end %>
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content="<%= display_title %>" />
+<meta property="og:description" content="<%= data.description || t("site.description") %>" />
+<meta property="og:url" content="<%= absolute_url resource %>" />
+<meta property="og:locale" content="<%= site.locale %>" />
+<meta name="twitter:card" content="summary_large_image" />
+
+<link rel="icon" href="<%= relative_url '/favicon.ico' %>" sizes="any" />
+<link rel="icon" href="<%= relative_url '/favicon.svg' %>" type="image/svg+xml" />
+<link rel="icon" href="<%= relative_url '/favicon-32x32.png' %>" type="image/png" sizes="32x32" />
+<link rel="icon" href="<%= relative_url '/favicon-16x16.png' %>" type="image/png" sizes="16x16" />
+<link rel="apple-touch-icon" href="<%= relative_url '/apple-touch-icon.png' %>" sizes="180x180" />
+
+<link rel="stylesheet" href="<%= asset_path "styles/tailwind.css" %>" />
+<link rel="stylesheet" href="<%= asset_path :css %>" />
+<script src="<%= asset_path :js %>" defer></script>
+<% if data.slug == "installer" %>
+<script type="module" src="<%= asset_path "javascript/installer.js" %>"></script>
+<% end %>
+<%= live_reload_dev_js %>
+
+<script>
+  // Applied before first paint to avoid a flash of the wrong color theme.
+  (function () {
+    try {
+      var stored = localStorage.getItem("r2p2-docs-theme");
+      var wantsDark = stored ? stored === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+      if (wantsDark) document.documentElement.classList.add("dark");
+    } catch (e) {}
+  })();
+</script>

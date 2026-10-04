@@ -1,0 +1,156 @@
+ja:
+  site:
+    title: R2P2-ESP32 ドキュメント
+    tagline: ESP32で動くPicoRuby
+    description: >-
+      R2P2-ESP32のドキュメントです。PicoRubyシェルであるR2P2をESP32マイコン上で
+      直接動作させる方法を紹介します。
+
+  nav:
+    docs: ドキュメント
+    installer: インストーラー
+    github: GitHub
+    home: ホーム
+    sections:
+      getting_started: はじめに
+      build: 自分でビルドする
+      environment_setup: 環境構築
+      run: 動かす
+      advanced: 高度な使い方
+      devices: デバイス
+
+  header:
+    search_placeholder: ドキュメントを検索...
+    search_no_results: 該当する結果が見つかりませんでした
+    search_unavailable: 検索は一時的に利用できません
+    toggle_theme: カラーテーマを切り替え
+    switch_language: 言語を切り替え
+    open_menu: メニューを開く
+    close_menu: メニューを閉じる
+
+  sidebar:
+    on_this_page: このページの内容
+
+  pagination:
+    previous: 前へ
+    next: 次へ
+
+  footer:
+    edit_page: このページをGitHubで編集
+    license: MITライセンスのもとで公開されています。
+    built_with: Bridgetown と Tailwind CSS で構築されています。
+
+  home:
+    hero:
+      eyebrow: PicoRuby × ESP32
+      title: ESP32上でRubyを直接動かそう
+      description: >-
+        R2P2-ESP32は、PicoRubyシェルであるR2P2をESP32マイコンに移植したプロジェクトです。
+        ブラウザからファームウェアを書き込むだけで、数分で実機上のRubyを体験できます。
+      cta_primary: はじめる
+      cta_secondary: GitHubで見る
+    features:
+      - title: ブラウザから書き込み
+        description: >-
+          特別な開発環境は不要。Web Installerからビルド済みファームウェアを
+          そのまま書き込んで始められます。
+      - title: フル機能のRuby REPL
+        description: >-
+          デバイス上のirbに入り、picoruby-shellをインタラクティブに操作できます。
+      - title: 複数のESP32シリーズに対応
+        description: >-
+          ESP32、ESP32-C3、ESP32-C6、ESP32-H2、ESP32-P4、ESP32-S3の各ボードに対応しています。
+      - title: オープンソース
+        description: >-
+          ワンチップマイコン向けの最小Ruby実装であるPicoRubyをベースにしています。
+    steps:
+      title: 3ステップでRubyを動かす
+      description: >-
+        試すだけなら、何もインストールする必要はありません。
+      items:
+        - title: 書き込む
+          description: >-
+            Web Installerでチップを選び、ビルド済みファームウェアをUSB経由で書き込みます。
+          link: インストーラーを開く
+          href: /installer/
+        - title: 接続する
+          description: >-
+            シリアルコンソールを開けば、ボード上のR2P2シェルにそのまま入れます。
+          link: モニタリングのガイド
+          href: /docs/monitoring/
+        - title: コードを書く
+          description: >-
+            irbの実行、スクリプトの転送、WiFi設定まで、すべてデバイス上のRubyで行えます。
+          link: クイックスタート
+          href: /docs/quick-start/
+    targets:
+      title: ESP32ファミリーを幅広くサポート
+      description: >-
+        以下のチップ向けにビルド済みイメージを公開しています（対応するものはUSBコンソール版も用意）。
+      link: 動作確認済みデバイスを見る
+    vms:
+      title: Ruby VMを選べる
+      description: 十分なメモリがあるボードでは、どちらのVMも利用できます。
+      items:
+        - name: FemtoRuby (mruby/c)
+          description: >-
+            軽量なVM。SPIRAMのないボードを含め、対応するすべてのチップで動作します。
+        - name: PicoRuby (mruby)
+          description: >-
+            mrubyベースの高機能なVM。ESP32-S3ボードで動作確認されています。
+    explore:
+      title: ドキュメントを探す
+      items:
+        - title: はじめに
+          description: R2P2-ESP32とは何か、数分で動かす方法。
+          href: /docs/introduction/
+        - title: 自分でビルドする
+          description: ESP-IDFの準備、設定、独自ファームウェアのビルド。
+          href: /docs/why-build/
+        - title: 動かす
+          description: ボードへの書き込み、モニタリング、デバッグ。
+          href: /docs/flashing/
+        - title: 高度な使い方
+          description: WiFi、ヒープ・スタックサイズ、パーティション、QEMU。
+          href: /docs/wifi/
+    docs_cta:
+      title: 次のステップへ
+      description: >-
+        クイックスタートガイドに沿って、ボードへの書き込みから最初のRubyプログラムの
+        実行までを数分で体験できます。
+      button: ドキュメントを読む
+
+  installer:
+    title: R2P2-ESP32 Webインストーラー
+    subtitle: 開発ツールチェーン不要。ブラウザから直接ESP32デバイスに書き込みます。
+    prerequisites_title: "はじめる前に:"
+    prerequisites:
+      - ESP32ボードをUSBでPCに接続してください
+      - Google Chrome、Microsoft Edge、Operaのいずれかを使用してください(Web Serialが必要です)
+      - お使いのボードのターゲットチップと、使いたいVMを確認しておいてください
+    select_firmware_title: ファームウェアを選択
+    board_label: ターゲット
+    ruby_label: VM
+    status:
+      loading: 最新リリース情報を読み込み中...
+      loaded: "最新リリース: {version}"
+      error: "リリース情報の取得に失敗しました: {message}"
+    flash_title: ファームウェアを書き込む
+    connect_button: Connect and Flash
+    unsupported: >-
+      お使いのブラウザはWeb Serialに対応していません。Google Chrome、
+      Microsoft Edge、Operaのいずれかでこのページを開いてください。
+    not_allowed: このツールはHTTPS環境(またはlocalhost)でのみ利用できます。
+    after_title: 書き込み後は
+    after_body: >-
+      デバイスをリセットし、Webターミナルを開いてirbを起動するか、最初のRuby
+      プログラムを実行してください。
+    open_terminal: Webターミナルを開く →
+    docs_cta: 自分でファームウェアをビルドしたい場合はドキュメントへ →
+    footer_powered_by: Powered by
+    footer_tagline: R2P2-ESP32 — ESP32で動くPicoRuby
+
+  not_found:
+    title: ページが見つかりません
+    description: お探しのページは存在しないか、移動した可能性があります。
+    button: ホームに戻る
