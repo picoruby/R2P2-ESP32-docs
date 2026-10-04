@@ -33,6 +33,7 @@
     - slug: stack-size
     - slug: partitions
     - slug: qemu
+    - slug: mcp-server
 
 - id: devices
   items:
