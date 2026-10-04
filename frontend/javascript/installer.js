@@ -176,6 +176,16 @@ document.addEventListener("DOMContentLoaded", () => {
 const BUTTON_STYLE =
   "background:#e60033;color:#fff;border:none;padding:10px 32px;border-radius:4px;cursor:pointer;font-size:14px;font-family:inherit"
 
+// The dashboard offers "Logs & Console", which we don't want: the web terminal
+// is linked from the completion page instead.
+function hideConsoleItem(root) {
+  for (const item of root.querySelectorAll("ew-list-item")) {
+    if (item.querySelector('[slot="headline"]')?.textContent.trim() === "Logs & Console") {
+      item.remove()
+    }
+  }
+}
+
 function injectCompletionUI(dialog, button) {
   const root = dialog.shadowRoot
   if (!root) return
@@ -189,7 +199,7 @@ function injectCompletionUI(dialog, button) {
   const container = document.createElement("div")
   container.className = "r2p2-completion"
   container.style.cssText =
-    "display:flex;flex-direction:column;align-items:center;gap:14px;padding:4px 16px"
+    "display:flex;flex-direction:column;align-items:center;gap:14px;padding:4px 16px;width:100%;box-sizing:border-box"
 
   const message = document.createElement("p")
   message.textContent = resetMessage
@@ -231,7 +241,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const wait = setInterval(() => {
           if (!node.shadowRoot) return
           clearInterval(wait)
-          new MutationObserver(() => injectCompletionUI(node, button)).observe(node.shadowRoot, {
+          new MutationObserver(() => {
+            hideConsoleItem(node.shadowRoot)
+            injectCompletionUI(node, button)
+          }).observe(node.shadowRoot, {
             childList: true,
             subtree: true,
           })
