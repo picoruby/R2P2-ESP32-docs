@@ -11,12 +11,18 @@ task default: :deploy
 desc "Build the Bridgetown site for deployment"
 task :deploy => [:clean, "firmware:fetch", "frontend:build"] do
   Bridgetown::Commands::Build.start
-  Rake::Task[:pagefind].invoke
+  # Don't use Rake::Task[:pagefind] here: Build runs inside Rake.with_application,
+  # after which the task lookup fails with "Don't know how to build task".
+  build_search_index
+end
+
+def build_search_index
+  sh "npx pagefind --site output"
 end
 
 desc "Build the search index (needs a completed build in output/ first)"
 task :pagefind do
-  sh "npx pagefind --site output"
+  build_search_index
 end
 
 desc "Build the site in a test environment"
