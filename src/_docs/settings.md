@@ -65,7 +65,7 @@ conf.gem core: 'picoruby-gpio'
 
 **This is where you add or remove mrbgems.** To include your own gem, add a
 line here, e.g. `conf.gem github: 'yourname/your-mrbgem'` (see
-[Debugging](../debugging/) for a real example using `picoruby-debug`), then
+[Debugging](../debugging/) for a real example using `mrdebug`), then
 rebuild.
 
 > Two more build-time environment variables — `HEAP_SIZE` and

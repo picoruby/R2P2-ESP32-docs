@@ -1,15 +1,16 @@
 import "esp-web-tools/dist/install-button.js"
 
 // Flashes R2P2-ESP32 firmware straight from the browser via Web Serial,
-// using the official ESP Web Tools component. Firmware choices are read
-// live from the latest GitHub release so this never goes stale.
+// using the official ESP Web Tools component. Firmware choices come from
+// the latest R2P2-ESP32 GitHub release, which `rake firmware:fetch`
+// mirrors into /firmware/ at build time (GitHub release downloads send no
+// CORS headers, so the browser can't fetch them directly). The scheduled
+// workflow in .github/workflows/update-firmware.yml keeps it fresh.
 //
 // Release assets are single merged images (bootloader + partition table +
 // app, produced by `esptool merge_bin`/`idf.py merge-bin` in CI) named
 // `R2P2-ESP32-{chip}[-{variant}]-{ruby}.bin`. Each is flashed as the single
 // manifest part for its chip, at that chip's bootloader offset.
-const GITHUB_RELEASES_API = "https://api.github.com/repos/picoruby/R2P2-ESP32/releases/latest"
-
 // Bootloader flash offsets, taken from ESP Web Tools' own chip ROM
 // definitions (`BOOTLOADER_FLASH_OFFSET` in `esp-web-tools/dist/web/*.js`).
 // Verified against the actual release assets: each `.bin` starts with the
@@ -51,7 +52,7 @@ const RUBY_LABEL = {
   picoruby: "PicoRuby (mruby)",
 }
 
-function parseAssets(assets) {
+function parseAssets(assets, baseUrl) {
   return assets
     .filter((a) => a.name.endsWith(".bin"))
     .map((a) => {
@@ -62,7 +63,7 @@ function parseAssets(assets) {
       const chip = parts[0]
       const variant = parts.slice(1, -1).join("_") || null
       const chipKey = variant ? `${chip}_${variant}` : chip
-      return { chip, chipKey, ruby, url: a.browser_download_url }
+      return { chip, chipKey, ruby, url: new URL(a.name, baseUrl).href }
     })
     .filter((a) => a.chip in CHIP_FAMILY && a.ruby in RUBY_LABEL)
 }
@@ -117,10 +118,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function fetchReleaseInfo() {
     try {
-      const res = await fetch(GITHUB_RELEASES_API)
+      const baseUrl = new URL(statusEl.dataset.firmwareUrl, location.href).href
+      const res = await fetch(new URL("release.json", baseUrl))
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
       releaseInfo = await res.json()
-      parsedAssets = parseAssets(releaseInfo.assets)
+      parsedAssets = parseAssets(releaseInfo.assets, baseUrl)
 
       if (parsedAssets.length === 0) throw new Error("No compatible firmware assets found")
 

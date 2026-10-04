@@ -4,6 +4,9 @@ output
 .bridgetown-metadata
 .routes.json
 
+# Firmware downloaded from the latest R2P2-ESP32 release (rake firmware:fetch)
+/src/firmware
+
 # Dependency folders
 node_modules
 

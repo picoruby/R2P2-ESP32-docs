@@ -13,8 +13,8 @@ $ export USE_WIFI=1
 $ rake build
 ```
 
-This is required, for example, to use [picoruby-debug](https://github.com/yuuu/picoruby-debug)'s
-DAP remote debugging over WiFi — see [Debugging](../debugging/).
+This is required, for example, to use [mrdebug](https://github.com/yuuu/mruby-debug)'s
+remote debugging over WiFi — see [Debugging](../debugging/).
 
 > **Note:** `USE_WIFI` is only read while CMake configures the project, not
 > on every build. If you already ran [Target Setup](../target-setup/) or a

@@ -64,7 +64,7 @@ conf.gem core: 'picoruby-gpio'
 
 **mrbgemの追加・削除はここで行います。** 自分のgemを組み込みたい場合は、ここに
 `conf.gem github: 'yourname/your-mrbgem'`のような行を追加してから
-([デバッグ](../debugging/)ページの`picoruby-debug`の実例も参照)、再ビルドしてください。
+([デバッグ](../debugging/)ページの`mrdebug`の実例も参照)、再ビルドしてください。
 
 > もう2つのビルド時環境変数、`HEAP_SIZE`と`PICORB_TASK_STACK_SIZE`は、
 > これらのRubyクロスビルド設定とは別の、周辺のC glueコードのビルドである

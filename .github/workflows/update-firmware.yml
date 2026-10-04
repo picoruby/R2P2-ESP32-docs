@@ -1,0 +1,49 @@
+name: Update Firmware
+
+# Mirrors the latest R2P2-ESP32 release into the Installer. The firmware itself
+# is downloaded at build time (rake firmware:fetch); this workflow only detects
+# a new release, records it in .firmware-version, and triggers a redeploy.
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'   # Every 15 minutes
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check latest release
+        id: release
+        run: |
+          TAG=$(curl -fSs \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/picoruby/R2P2-ESP32/releases/latest \
+            | jq -r '.tag_name')
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+
+      - name: Record new version and redeploy
+        env:
+          GH_TOKEN: ${{ github.token }}
+          LATEST: ${{ steps.release.outputs.tag }}
+        run: |
+          CURRENT=$(cat .firmware-version 2>/dev/null || echo "")
+          if [ -z "$LATEST" ] || [ "$LATEST" = "null" ] || [ "$CURRENT" = "$LATEST" ]; then
+            echo "Already up to date: ${CURRENT}"
+            exit 0
+          fi
+          echo "Update available: ${CURRENT} -> ${LATEST}"
+          echo "${LATEST}" > .firmware-version
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .firmware-version
+          git commit -m "Update firmware to ${LATEST}"
+          git push
+          # Pushes made with GITHUB_TOKEN don't trigger other workflows.
+          gh workflow run gh-pages.yml --ref "${GITHUB_REF_NAME}"

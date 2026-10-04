@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   build:
@@ -26,6 +27,7 @@ jobs:
       - name: Build
         env:
           BRIDGETOWN_ENV: production
+          GITHUB_TOKEN: ${{ github.token }}
         run: bin/bridgetown deploy
 
       - name: Upload build artifact

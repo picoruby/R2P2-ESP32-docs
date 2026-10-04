@@ -100,9 +100,13 @@ matter, then add its `slug` somewhere in `docs_nav.yml`.
 ## The Installer page
 
 `/installer/` (`src/_layouts/installer.erb` + `frontend/javascript/installer.js`) flashes real firmware
-via [ESP Web Tools](https://esphome.github.io/esp-web-tools/), sourced live from the [GitHub Releases
-API](https://api.github.com/repos/picoruby/R2P2-ESP32/releases/latest) — no hardcoded firmware list to
-keep in sync. Each release asset is a single merged image (bootloader + partition table + app, built via
+via [ESP Web Tools](https://esphome.github.io/esp-web-tools/), sourced from the [latest R2P2-ESP32
+release](https://api.github.com/repos/picoruby/R2P2-ESP32/releases/latest) — no hardcoded firmware list to
+keep in sync. `rake firmware:fetch` (run by `rake deploy`) mirrors that release's `.bin` assets plus a
+`release.json` into `src/firmware/` (gitignored, served at `/firmware/`), because GitHub release downloads
+send no CORS headers. Run it once before local development of `/installer/`. The scheduled
+`update-firmware.yml` workflow polls every 15 minutes, records the tag in `.firmware-version`, and
+dispatches `gh-pages.yml` to redeploy when a new release appears. Each release asset is a single merged image (bootloader + partition table + app, built via
 `esptool merge_bin`/`idf.py merge-bin`), flashed as one manifest part at that chip's bootloader offset
 (verified against ESP Web Tools' own chip ROM definitions and the actual asset bytes — see comments in
 `installer.js`). It does *not* replicate picoruby.org's own installer's separate `storage.bin` part, since

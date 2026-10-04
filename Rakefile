@@ -9,7 +9,7 @@ task default: :deploy
 # Standard set of tasks, which you can customize if you wish:
 #
 desc "Build the Bridgetown site for deployment"
-task :deploy => [:clean, "frontend:build"] do
+task :deploy => [:clean, "firmware:fetch", "frontend:build"] do
   Bridgetown::Commands::Build.start
   Rake::Task[:pagefind].invoke
 end
@@ -28,6 +28,55 @@ end
 desc "Runs the clean command"
 task :clean do
   Bridgetown::Commands::Clean.start
+end
+
+namespace :firmware do
+  FIRMWARE_RELEASES_API = "https://api.github.com/repos/picoruby/R2P2-ESP32/releases/latest"
+  FIRMWARE_DIR = File.expand_path("src/firmware", __dir__)
+
+  def firmware_get(url, limit = 5)
+    raise "Too many redirects: #{url}" if limit.zero?
+    uri = URI(url)
+    req = Net::HTTP::Get.new(uri)
+    req["Accept"] = "application/vnd.github+json"
+    # Only send the token to the GitHub API, never to the asset CDN it redirects to.
+    req["Authorization"] = "Bearer #{ENV["GITHUB_TOKEN"]}" if ENV["GITHUB_TOKEN"] && uri.host == "api.github.com"
+    res = Net::HTTP.start(uri.host, uri.port, use_ssl: true) { |http| http.request(req) }
+    case res
+    when Net::HTTPSuccess then res.body
+    when Net::HTTPRedirection then firmware_get(res["location"], limit - 1)
+    else raise "GET #{url} failed: HTTP #{res.code}"
+    end
+  end
+
+  desc "Download the latest R2P2-ESP32 release firmware into src/firmware/ (served by the Installer)"
+  task :fetch do
+    require "net/http"
+    require "json"
+    require "fileutils"
+
+    release = JSON.parse(firmware_get(FIRMWARE_RELEASES_API))
+    tag = release.fetch("tag_name")
+    assets = release.fetch("assets").select { |a| a["name"] =~ /\AR2P2-ESP32-.+\.bin\z/ }
+    raise "No firmware assets found in release #{tag}" if assets.empty?
+
+    info_path = File.join(FIRMWARE_DIR, "release.json")
+    current = File.exist?(info_path) ? JSON.parse(File.read(info_path))["tag_name"] : nil
+    if current == tag && assets.all? { |a| File.exist?(File.join(FIRMWARE_DIR, a["name"])) }
+      puts "Firmware already up to date: #{tag}"
+      next
+    end
+
+    puts "Updating firmware: #{current.inspect} -> #{tag}"
+    FileUtils.rm_rf(FIRMWARE_DIR)
+    FileUtils.mkdir_p(FIRMWARE_DIR)
+    assets.each do |a|
+      puts "  #{a["name"]}"
+      File.binwrite(File.join(FIRMWARE_DIR, a["name"]), firmware_get(a["browser_download_url"]))
+    end
+    File.write(info_path, JSON.pretty_generate(tag_name: tag, assets: assets.map { |a| { name: a["name"] } }))
+    File.write(File.expand_path(".firmware-version", __dir__), "#{tag}\n")
+  end
 end
 
 namespace :frontend do

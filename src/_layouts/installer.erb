@@ -27,6 +27,7 @@ layout: default
     <p
       data-installer-status
       data-state="loading"
+      data-firmware-url="<%= relative_url "/firmware/" %>"
       data-loaded-template="<%= t("installer.status.loaded") %>"
       data-error-template="<%= t("installer.status.error") %>"
       class="mt-2 text-sm text-neutral-500 data-[state=error]:text-red-600 data-[state=loaded]:text-green-700 dark:text-neutral-400 dark:data-[state=error]:text-red-400 dark:data-[state=loaded]:text-green-400"

@@ -13,8 +13,8 @@ $ export USE_WIFI=1
 $ rake build
 ```
 
-これは、例えば[picoruby-debug](https://github.com/yuuu/picoruby-debug)の
-Wi-Fi経由のDAPリモートデバッグを使う場合に必要です
+これは、例えば[mrdebug](https://github.com/yuuu/mruby-debug)の
+Wi-Fi経由のリモートデバッグを使う場合に必要です
 ([デバッグ](../debugging/)を参照)。
 
 > **Note:** `USE_WIFI`はCMakeがプロジェクトを構成するときにしか読み込まれず、
