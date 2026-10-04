@@ -106,12 +106,15 @@ keep in sync. `rake firmware:fetch` (run by `rake deploy`) mirrors that release'
 `release.json` into `src/firmware/` (gitignored, served at `/firmware/`), because GitHub release downloads
 send no CORS headers. Run it once before local development of `/installer/`. The scheduled
 `update-firmware.yml` workflow polls every 15 minutes, records the tag in `.firmware-version`, and
-dispatches `gh-pages.yml` to redeploy when a new release appears. Each release asset is a single merged image (bootloader + partition table + app, built via
-`esptool merge_bin`/`idf.py merge-bin`), flashed as one manifest part at that chip's bootloader offset
-(verified against ESP Web Tools' own chip ROM definitions and the actual asset bytes — see comments in
-`installer.js`). It does *not* replicate picoruby.org's own installer's separate `storage.bin` part, since
-that depends on picoruby.org-only build infrastructure this repo doesn't have; a fresh flash instead gets
-an empty on-device filesystem (see [File Transfer](src/_docs/file-transfer.md)).
+dispatches `gh-pages.yml` to redeploy when a new release appears.
+
+Release assets are app-only images (no bootloader/partition table), so, like
+[picoruby/R2P2-ESP32-installer](https://github.com/picoruby/R2P2-ESP32-installer), each install flashes four
+parts: `bootloader.bin` (chip-specific offset), `partition-table.bin` (`0x8000`), the release app (`0x10000`)
+and `storage.bin` (`0x210000`). All but the app are committed under `src/installer-base/` (copied from that
+repo, served at `/installer-base/`). Only chips/variants with a directory there are offered (esp32, esp32c3,
+esp32s3, esp32s3-usb_console); to support another chip, add its `bootloader.bin` and `partition-table.bin`
+and register it in `BASE_DIR` in `installer.js`.
 
 This pulls in `esp-web-tools` (which depends on `@material/web` and `esptool-js`) as a *second* esbuild
 entry point (see `esbuild.config.js`), so its ~500KB bundle only loads on `/installer/`, not site-wide.

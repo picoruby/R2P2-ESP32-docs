@@ -7,22 +7,30 @@ import "esp-web-tools/dist/install-button.js"
 // CORS headers, so the browser can't fetch them directly). The scheduled
 // workflow in .github/workflows/update-firmware.yml keeps it fresh.
 //
-// Release assets are single merged images (bootloader + partition table +
-// app, produced by `esptool merge_bin`/`idf.py merge-bin` in CI) named
-// `R2P2-ESP32-{chip}[-{variant}]-{ruby}.bin`. Each is flashed as the single
-// manifest part for its chip, at that chip's bootloader offset.
+// Release assets (`R2P2-ESP32-{chip}[-{variant}]-{ruby}.bin`) are app-only
+// images (`build/R2P2-ESP32.bin`), with no bootloader or partition table. So,
+// as in picoruby/R2P2-ESP32-installer, each install writes four parts:
+// bootloader + partition table + storage (committed under src/installer-base/,
+// served at /installer-base/) and the app from the release (served at /firmware/).
+// Only chips/variants that have a committed bootloader + partition table here
+// are offered (the keys of BASE_DIR).
 // Bootloader flash offsets, taken from ESP Web Tools' own chip ROM
 // definitions (`BOOTLOADER_FLASH_OFFSET` in `esp-web-tools/dist/web/*.js`).
-// Verified against the actual release assets: each `.bin` starts with the
-// ESP image magic byte (0xE9) at position 0, i.e. it's meant to be flashed
-// starting at exactly this offset.
 const BOOTLOADER_OFFSET = {
   esp32: 0x1000,
   esp32c3: 0x0,
-  esp32c6: 0x0,
-  esp32h2: 0x0,
-  esp32p4: 0x2000,
   esp32s3: 0x0,
+}
+const PARTITION_TABLE_OFFSET = 0x8000
+const APP_OFFSET = 0x10000
+const STORAGE_OFFSET = 0x210000
+
+// chipKey (chip[_variant]) -> directory under /installer-base/
+const BASE_DIR = {
+  esp32: "esp32",
+  esp32c3: "esp32c3",
+  esp32s3: "esp32s3",
+  esp32s3_usb_console: "esp32s3-usb_console",
 }
 
 const CHIP_FAMILY = {
@@ -65,10 +73,11 @@ function parseAssets(assets, baseUrl) {
       const chipKey = variant ? `${chip}_${variant}` : chip
       return { chip, chipKey, ruby, url: new URL(a.name, baseUrl).href }
     })
-    .filter((a) => a.chip in CHIP_FAMILY && a.ruby in RUBY_LABEL)
+    .filter((a) => a.chipKey in BASE_DIR && a.ruby in RUBY_LABEL)
 }
 
-function buildManifest(asset, version) {
+function buildManifest(asset, version, installerBaseUrl) {
+  const base = (file) => new URL(`${BASE_DIR[asset.chipKey]}/${file}`, installerBaseUrl).href
   return {
     name: "R2P2-ESP32",
     version,
@@ -76,7 +85,13 @@ function buildManifest(asset, version) {
     builds: [
       {
         chipFamily: CHIP_FAMILY[asset.chip],
-        parts: [{ path: asset.url, offset: BOOTLOADER_OFFSET[asset.chip] ?? 0x1000 }],
+        improv: false,
+        parts: [
+          { path: base("bootloader.bin"), offset: BOOTLOADER_OFFSET[asset.chip] },
+          { path: base("partition-table.bin"), offset: PARTITION_TABLE_OFFSET },
+          { path: asset.url, offset: APP_OFFSET },
+          { path: new URL("storage.bin", installerBaseUrl).href, offset: STORAGE_OFFSET },
+        ],
       },
     ],
   }
@@ -90,6 +105,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const installButton = document.querySelector("[data-installer-button]")
   if (!statusEl || !installButton) return
 
+  const installerBaseUrl = new URL(statusEl.dataset.installerBaseUrl, location.href).href
   let releaseInfo = null
   let parsedAssets = []
   let currentManifestUrl = null
@@ -101,7 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
     )
     if (!asset) return
 
-    const manifest = buildManifest(asset, releaseInfo.tag_name)
+    const manifest = buildManifest(asset, releaseInfo.tag_name, installerBaseUrl)
     const blob = new Blob([JSON.stringify(manifest)], { type: "application/json" })
 
     if (currentManifestUrl) URL.revokeObjectURL(currentManifestUrl)
@@ -150,4 +166,77 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   fetchReleaseInfo()
+})
+
+// After a successful flash, ESP Web Tools shows "Next" (leading to a
+// "Logs & Console" dashboard). Replace that with: reset reminder -> OK ->
+// link to the web terminal + Close. The dialog is a shadow-DOM element
+// appended to <body>, so we watch for it and patch it when it reaches the
+// "Installation complete!" page.
+const BUTTON_STYLE =
+  "background:#e60033;color:#fff;border:none;padding:10px 32px;border-radius:4px;cursor:pointer;font-size:14px;font-family:inherit"
+
+function injectCompletionUI(dialog, button) {
+  const root = dialog.shadowRoot
+  if (!root) return
+  if (!root.querySelector('ewt-page-message[label="Installation complete!"]')) return
+  const actions = root.querySelector('div[slot="actions"]')
+  if (!actions || actions.querySelector(".r2p2-completion")) return
+
+  const { resetMessage, okLabel, closeLabel, terminalLabel, terminalUrl } = button.dataset
+  actions.innerHTML = ""
+
+  const container = document.createElement("div")
+  container.className = "r2p2-completion"
+  container.style.cssText =
+    "display:flex;flex-direction:column;align-items:center;gap:14px;padding:4px 16px"
+
+  const message = document.createElement("p")
+  message.textContent = resetMessage
+  message.style.cssText = "font-size:15px;font-weight:500;text-align:center"
+
+  const ok = document.createElement("button")
+  ok.textContent = okLabel
+  ok.style.cssText = BUTTON_STYLE
+  ok.addEventListener("click", () => {
+    container.innerHTML = ""
+
+    const link = document.createElement("a")
+    link.href = terminalUrl
+    link.target = "_blank"
+    link.rel = "noopener noreferrer"
+    link.textContent = terminalLabel
+    link.style.cssText = "color:#e60033;font-size:15px;font-weight:500"
+
+    const close = document.createElement("button")
+    close.textContent = closeLabel
+    close.style.cssText = BUTTON_STYLE
+    close.addEventListener("click", () => root.querySelector("ew-dialog")?.close())
+
+    container.append(link, close)
+  })
+
+  container.append(message, ok)
+  actions.append(container)
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const button = document.querySelector("[data-installer-button]")
+  if (!button) return
+
+  new MutationObserver((mutations) => {
+    for (const m of mutations) {
+      for (const node of m.addedNodes) {
+        if (node.nodeName !== "EWT-INSTALL-DIALOG") continue
+        const wait = setInterval(() => {
+          if (!node.shadowRoot) return
+          clearInterval(wait)
+          new MutationObserver(() => injectCompletionUI(node, button)).observe(node.shadowRoot, {
+            childList: true,
+            subtree: true,
+          })
+        }, 50)
+      }
+    }
+  }).observe(document.body, { childList: true })
 })

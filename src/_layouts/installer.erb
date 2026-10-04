@@ -28,6 +28,7 @@ layout: default
       data-installer-status
       data-state="loading"
       data-firmware-url="<%= relative_url "/firmware/" %>"
+      data-installer-base-url="<%= relative_url "/installer-base/" %>"
       data-loaded-template="<%= t("installer.status.loaded") %>"
       data-error-template="<%= t("installer.status.error") %>"
       class="mt-2 text-sm text-neutral-500 data-[state=error]:text-red-600 data-[state=loaded]:text-green-700 dark:text-neutral-400 dark:data-[state=error]:text-red-400 dark:data-[state=loaded]:text-green-400"
@@ -59,7 +60,15 @@ layout: default
 
   <div class="mt-6 rounded-xl border border-neutral-200 p-6 text-center dark:border-neutral-800">
     <h2 class="text-lg font-semibold text-neutral-900 dark:text-white"><%= t("installer.flash_title") %></h2>
-    <esp-web-install-button data-installer-button class="mt-4 inline-block">
+    <esp-web-install-button
+      data-installer-button
+      data-reset-message="<%= t("installer.reset_message") %>"
+      data-ok-label="<%= t("installer.ok") %>"
+      data-close-label="<%= t("installer.close") %>"
+      data-terminal-label="<%= t("installer.open_terminal") %>"
+      data-terminal-url="<%= site.data.site_metadata.web_terminal %>"
+      class="mt-4 inline-block"
+    >
       <button
         slot="activate"
         type="button"

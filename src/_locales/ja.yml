@@ -146,6 +146,9 @@ ja:
       デバイスをリセットし、Webターミナルを開いてirbを起動するか、最初のRuby
       プログラムを実行してください。
     open_terminal: Webターミナルを開く →
+    reset_message: デバイスをリセットしてファームウェアを起動してください。
+    ok: OK
+    close: 閉じる
     docs_cta: 自分でファームウェアをビルドしたい場合はドキュメントへ →
     footer_powered_by: Powered by
     footer_tagline: R2P2-ESP32 — ESP32で動くPicoRuby

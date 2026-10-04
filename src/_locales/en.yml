@@ -155,6 +155,9 @@ en:
       Reset your device, then open the Web Terminal to start irb or run your
       first Ruby program.
     open_terminal: Open Web Terminal →
+    reset_message: Please reset your device to start the firmware.
+    ok: OK
+    close: Close
     docs_cta: Prefer to build firmware yourself? See the docs →
     footer_powered_by: Powered by
     footer_tagline: R2P2-ESP32 — PicoRuby on ESP32
