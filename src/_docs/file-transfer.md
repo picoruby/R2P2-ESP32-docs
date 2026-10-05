@@ -1,21 +1,47 @@
 ---
 title: File Transfer
-description: Two ways to get files onto the device — at runtime, or baked into the build.
+description: Three ways to get files onto the device — from the Web Terminal, with a Rake task, or baked into the build.
 ---
 
-There are two ways to get files onto the device:
+There are three ways to get files onto the device:
 
-- **At runtime** — upload over an existing connection, without rebuilding
-  or reflashing anything.
+- **With the Web Terminal** — upload from the browser over an existing
+  connection, without rebuilding or reflashing anything.
+- **With a Rake task** — upload (or download) from your host's command line,
+  also without rebuilding or reflashing anything.
 - **At build time** — place files under the project's `storage/` directory
   before building, so they're baked into the firmware image itself.
 
-## At runtime
+## With the Web Terminal
 
 Use the [Web Terminal](https://picoruby.org/terminal)'s File Editor (or any
 serial connection) — like uploading `hello.rb` in
 [Quick Start](../quick-start/). Fast to iterate with, but whatever you
 upload this way is lost if you erase and reflash the device.
+
+## With a Rake task
+
+`rakelib/picomodem.rake` provides tasks that transfer files over the serial
+connection from your host's command line, using the PicoModem client that
+ships with `picoruby-picomodem`. It runs on the host `picoruby` built by
+`rake setup_<target>` (or the one named by the `PICORUBY` environment
+variable, or one on your `PATH`).
+
+```sh
+# Upload: REMOTE defaults to LOCAL's basename
+rake "picomodem:put[hello.rb,/home/hello.rb]"
+
+# Download: LOCAL defaults to REMOTE's basename
+rake "picomodem:get[/home/hello.rb,hello.rb]"
+```
+
+- Quote the task name so your shell doesn't interpret the `[...]`.
+- Set `PORT` to choose the serial port, as with `rake flash` (the client's
+  default is `/dev/ttyACM0`), e.g. `PORT=/dev/ttyUSB0 rake "picomodem:put[...]"`.
+- The device's shell must be sitting at its prompt, and no other program
+  (such as a serial monitor or the Web Terminal) may hold the port.
+
+Like the Web Terminal, this is lost if you erase and reflash the device.
 
 ## At build time
 
@@ -58,7 +84,7 @@ auto-connect — a concrete example of the build-time approach above.
 
 > **Careful:** because the storage image is built with `FLASH_IN_PROJECT`,
 > the default `rake flash` (see [Flash and Monitor](../flashing/)) rewrites
-> it along with the app — any files you uploaded at runtime are replaced
+> it along with the app — any files you uploaded at runtime (via the Web Terminal or Rake task) are replaced
 > with whatever is currently in your local `storage/` directory. To update
 > just the app and leave on-device storage alone, use `rake flash_factory`
 > instead, which only touches the factory/app partition.
