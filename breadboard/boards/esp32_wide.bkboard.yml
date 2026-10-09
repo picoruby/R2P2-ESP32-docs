@@ -1,0 +1,20 @@
+# Breadboard wide enough for an ESP32-DevKitC (its two pin rows are 10 rows apart,
+# so a standard breadboard leaves no free holes on the upper pin row).
+# Place the DevKitC at "c2": pins land on rows c and l, leaving rows a-b and m-n free.
+id: esp32_wide
+name: Wide breadboard for ESP32-DevKitC (40 columns, 14 rows)
+terminal:
+  columns: 40
+  rows: [a, b, c, d, e, f, g, h, i, j, k, l, m, n]
+  groups: [[a, b, c, d, e, f], [g, h, i, j, k, l, m, n]]
+  ravine_between: [f, g]
+rails:
+  - {id: "T+", side: top, order: 0}
+  - {id: "T-", side: top, order: 1}
+  - {id: "B+", side: bottom, order: 1}
+  - {id: "B-", side: bottom, order: 0}
+rail_layout:
+  holes: 30
+  group_size: 5
+  start_column: 3
+  segments: [[1, 30]]

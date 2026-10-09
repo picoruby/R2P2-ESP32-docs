@@ -1,0 +1,11 @@
+# USB-to-serial converter module (3.3V logic). Leave the 5V pin unconnected.
+id: usb_serial
+category: module
+placement: offboard
+pins:
+  - {num: 1, name: TX, type: data}
+  - {num: 2, name: RX, type: data}
+  - {num: 3, name: GND, type: ground}
+  - {num: 4, name: 3V3, type: power}
+  - {num: 5, name: 5V, type: power}
+render: {shape: offboard, label: "USB UART"}

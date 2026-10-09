@@ -123,6 +123,20 @@ entry point (see `esbuild.config.js`), so its ~500KB bundle only loads on `/inst
 `checkbox-styles.cssresult.js`), which breaks the esbuild bundle; re-check this pin before upgrading either
 package.
 
+## Breadboard diagrams (Examples pages)
+
+The wiring diagrams on the Examples pages are drawn with [BreadKit](https://breadkit.github.io/breadkit/).
+Sources live in `breadboard/` (`circuits/*.bk.rb`, plus custom boards in `boards/` and custom parts —
+OLED, MAX7219, USB-serial, piezo — in `parts/`). The generated light/dark SVGs are committed to
+`src/images/examples/` and embedded with the `_breadboard.erb` partial, so the site build doesn't need
+BreadKit. After editing a circuit, regenerate them:
+
+```sh
+gem install breadkit breadkit-render breadkit-lint
+rake breadboard:lint
+rake breadboard:render
+```
+
 ## Search
 
 The header search box is real, powered by [Pagefind](https://pagefind.app/) (`frontend/javascript/search.js`

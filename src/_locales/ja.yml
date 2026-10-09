@@ -17,6 +17,7 @@ ja:
       environment_setup: 環境構築
       run: 動かす
       advanced: 高度な使い方
+      examples: サンプル集
       devices: デバイス
 
   header:

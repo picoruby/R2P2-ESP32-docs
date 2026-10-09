@@ -17,6 +17,7 @@ en:
       environment_setup: Environment Setup
       run: Run
       advanced: Advanced Usage
+      examples: Examples
       devices: Devices
 
   header:

@@ -35,6 +35,17 @@
     - slug: qemu
     - slug: mcp-server
 
+- id: examples
+  items:
+    - slug: example-overview
+    - slug: example-led-blink
+    - slug: example-gpio-input
+    - slug: example-pwm-piezo
+    - slug: example-adc-divider
+    - slug: example-uart-echo
+    - slug: example-i2c-oled
+    - slug: example-spi-matrix
+
 - id: devices
   items:
     - slug: supported-devices

@@ -120,3 +120,31 @@ Rake::Task['frontend:watcher'].enhance do
     'bin/tailwindcss --watch'
   )
 end
+
+namespace :breadboard do
+  BREADBOARD_SRC = File.expand_path("breadboard/circuits", __dir__)
+  BREADBOARD_OUT = File.expand_path("src/images/examples", __dir__)
+
+  def breadkit_sh(*cmd)
+    Bundler.with_unbundled_env { sh(*cmd) }
+  end
+
+  desc "Render breadboard/circuits/*.bk.rb to light/dark SVGs in src/images/examples/ (needs: gem install breadkit breadkit-render)"
+  task :render do
+    require "fileutils"
+    FileUtils.mkdir_p(BREADBOARD_OUT)
+    # breadkit is installed as a standalone gem set, not part of this Gemfile.
+    Dir[File.join(BREADBOARD_SRC, "*.bk.rb")].sort.each do |file|
+      name = File.basename(file, ".bk.rb")
+      { "" => "light", "-dark" => "dark" }.each do |suffix, theme|
+        breadkit_sh "bkrender", file, "-o", File.join(BREADBOARD_OUT, "#{name}#{suffix}.svg"),
+           "--orientation", "landscape", "--theme", theme, "--static"
+      end
+    end
+  end
+
+  desc "Lint breadboard/circuits/*.bk.rb"
+  task :lint do
+    breadkit_sh "bklint", *Dir[File.join(BREADBOARD_SRC, "*.bk.rb")].sort
+  end
+end

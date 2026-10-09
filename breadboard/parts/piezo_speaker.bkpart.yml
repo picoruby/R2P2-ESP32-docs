@@ -1,0 +1,8 @@
+# Passive piezo speaker (no polarity). Two leads placed on the breadboard.
+id: piezo_speaker
+category: output
+placement: leads
+pins:
+  - {num: 1, name: "1"}
+  - {num: 2, name: "2"}
+render: {shape: generic}
