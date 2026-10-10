@@ -20,7 +20,7 @@ description: R2P2-ESP32の動作が確認されているボードと、それぞ
 - **SPIRAM** — ボードにPSRAMが搭載されているかどうか。`sdkconfigs/spiram`で
   有効にすると、デフォルトの[ヒープサイズ](../heap-size/)も1MBに引き上げられます。
 
-[Web Installer](/installer/)は現在、ESP32、ESP32-C3、ESP32-C6、ESP32-H2、
+[Web Installer](../../installer/)は現在、ESP32、ESP32-C3、ESP32-C6、ESP32-H2、
 ESP32-P4、ESP32-S3向けのビルド済みイメージを公開しています(該当する場合は
 USBコンソール版も含む)。そのため、上記に個別に載っていなくても、これらのチップを
 搭載した他のボードでも動作する可能性が高いです。新しいハードウェアで
