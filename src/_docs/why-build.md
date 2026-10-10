@@ -3,7 +3,7 @@ title: When to Build It Yourself
 description: Decide whether you need a full build environment, or if the Web Installer is enough.
 ---
 
-The [Web Installer](/installer/) covers most getting-started needs — it flashes a
+The [Web Installer](../../installer/) covers most getting-started needs — it flashes a
 prebuilt firmware image straight from your browser, no toolchain required. You
 only need to build R2P2-ESP32 yourself if you want to:
 

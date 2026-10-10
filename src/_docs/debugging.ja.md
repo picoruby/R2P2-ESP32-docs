@@ -65,7 +65,7 @@ Stop: script.rb:6
 コマンドの全リファレンス(フレーム移動、表示式など)は
 [mrdebugのREADME](https://github.com/yuuu/mruby-debug)を参照してください。
 
-## Wi-Fi経由のリモートデバッグ
+## Wi-Fi経由のリモートデバッグ {#remote-debugging-over-wifi}
 
 ビルドに`picoruby-socket`も含まれている場合([Wi-Fiを有効にする](../wifi/)
 の`USE_WIFI=1`はこのためにあります)、mrdebugは上記のオンデバイスコンソール
