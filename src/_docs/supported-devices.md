@@ -26,4 +26,4 @@ ESP32, ESP32-C3, ESP32-C6, ESP32-H2, ESP32-P4, and ESP32-S3 (with and
 without the USB console variant, where applicable) — so other boards built
 around those chips are likely to work too, even if not individually listed
 above. If you get R2P2-ESP32 running on new hardware, consider [opening a
-pull request](https://github.com/picoruby/R2P2-ESP32) to add it here.
+pull request](https://github.com/picoruby/R2P2-ESP32-docs/compare) to add it here.
