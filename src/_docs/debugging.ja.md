@@ -11,7 +11,7 @@ description: mrdebugによるRubyレベルのインタラクティブなデバ�
 
 ```ruby
 # components/picoruby-esp32/build_config/xtensa-esp-picoruby.rb (または riscv-*) 内
-conf.gem github: 'yuuu/mruby-debug', branch: 'main', path: 'console'
+conf.gem github: 'yuuu/mruby-debug', path: 'console'
 ```
 
 `path: 'console'`のサブgemが、以下で使うデバイスのコンソール上の

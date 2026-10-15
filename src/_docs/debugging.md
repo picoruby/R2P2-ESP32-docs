@@ -10,7 +10,7 @@ PicoRuby (mruby) VM; FemtoRuby (mruby/c) has no debug hook for it to use.
 
 ```ruby
 # in components/picoruby-esp32/build_config/xtensa-esp-picoruby.rb (or riscv-*)
-conf.gem github: 'yuuu/mruby-debug', branch: 'main', path: 'console'
+conf.gem github: 'yuuu/mruby-debug', path: 'console'
 ```
 
 The `path: 'console'` sub-gem is what adds the `(mrdbg)` prompt on the
