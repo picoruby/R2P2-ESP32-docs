@@ -115,7 +115,7 @@ en:
           description: What R2P2-ESP32 is and how to run it in minutes.
           href: /docs/introduction/
         - title: Build It Yourself
-          description: Set up ESP-IDF, tweak settings, and build your own firmware.
+          description: Set up Docker or ESP-IDF, tweak settings, and build your own firmware.
           href: /docs/why-build/
         - title: Run
           description: Flash, monitor, and debug your board.

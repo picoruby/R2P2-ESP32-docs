@@ -28,8 +28,8 @@ $ export SDKCONFIG_DEFAULTS="sdkconfig.defaults;sdkconfigs/usb_console;sdkconfig
 ESP-IDFがプロジェクトを構成するときにしか読み込まれません。後から変更した場合は、
 ターゲットのセットアップ(例: `rake setup_esp32`)をやり直して強制的に再構成してください。
 
-Dockerを使う場合は、`docker:*`タスクはシェル環境からこれを読み込みません。代わりに
-プロジェクトルートの(gitignore済みの)`.env`ファイルに記述してください
+デフォルトのDockerのタスクも、シェル環境の`SDKCONFIG_DEFAULTS`をコンテナに引き継ぎます。
+代わりにプロジェクトルートの(gitignore済みの)`.env`ファイルに記述することもできます
 ([環境構築](../environment-setup/)を参照)。
 
 ## PicoRuby/FemtoRubyのビルド設定(`build_config/`)

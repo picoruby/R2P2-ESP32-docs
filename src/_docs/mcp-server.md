@@ -22,8 +22,10 @@ things without hardware on [QEMU](../qemu/), and manage mrbgems.
 
 ## Install
 
+The gems are declared in the `Gemfile` at the repository root, so run this
+from the repository root:
+
 ```sh
-$ cd mcp
 $ bundle install
 ```
 
@@ -61,8 +63,8 @@ ones you would put in `SDKCONFIG_DEFAULTS` (see [Settings](../settings/)).
 `setup`, `build`, `clean` and `flash` run the rake task as a job and **wait
 for it** (`timeout`, default 300 s; `0` returns at once). If it takes longer
 it keeps running and the call says so; follow it with `job_wait`. Only one
-job runs at a time. Everything runs in Docker (`rake docker:*`) unless
-`native: true` is passed.
+job runs at a time. Everything runs in Docker (the default rake tasks) unless
+`native: true` is passed, which runs the `native:` tasks instead.
 
 | Tool | Arguments | What it does |
 |------|-----------|--------------|
@@ -92,7 +94,7 @@ the server.
 
 File transfer needs the shell at its prompt (not inside `irb`) and the host
 `picoruby` built by `setup`. On macOS, a Docker-only build leaves a Linux
-binary there; run `rake setup_<target>` natively once.
+binary there; run `rake native:setup_<target>` once.
 
 ### QEMU tools
 

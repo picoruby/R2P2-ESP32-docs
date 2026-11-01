@@ -9,8 +9,9 @@ description: rake flashで、自分でビルドしたイメージをデバイス
 $ rake flash
 ```
 
-これは`esptool`を直接呼び出し、`idf.py build`が生成した
-`build/project_description.json`と`build/flash_args`からターゲットとオフセットを
+これはホスト上で[esp_flash](https://rubygems.org/gems/esp_flash) gemを使って実行され
+(`bundle install`でインストールします。[環境構築](../environment-setup/)を参照)、
+`idf.py build`が生成した`build/project_description.json`と`build/flasher_args.json`からターゲットとオフセットを
 読み取ります。そのため、直前にビルドしたターゲット・VMに常に一致します
 ([設定](../settings/)、[ビルド](../build/)を参照)。
 

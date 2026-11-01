@@ -9,8 +9,8 @@ description: rake monitorで、デバイスのシリアル出力を確認しま�
 $ rake monitor
 ```
 
-これは`esp-idf-monitor`を直接呼び出します(`esp_idf_monitor`のPythonモジュールが
-importできない場合は`idf-monitor`実行ファイルにフォールバックします)。ボーレートと、
+これは`rake flash`と同様に、ホスト上で[esp_flash](https://rubygems.org/gems/esp_flash) gem
+(`bundle install`でインストール)を使って実行されます。ボーレートと、
 バックトレースのシンボル解決に使うELFファイルのパスは`build/project_description.json`
 から読み取るため、`rake flash`と同様に直前のビルドに常に一致します。
 
