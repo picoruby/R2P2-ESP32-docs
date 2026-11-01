@@ -17,29 +17,62 @@ Docker上で実行されます。ESP-IDFを使ってホスト上でビルドし�
 
 ## Dockerを使う場合(デフォルト)
 
-ESP-IDFやホストツールチェーンをマシンに直接インストールする代わりに、
-公式の[`espressif/idf`](https://hub.docker.com/r/espressif/idf)イメージをベースにした
-コンテナ内でビルドします。このイメージにはすでにESP-IDF、`gcc`、`ruby`が
-含まれています。プロジェクトの`docker/Dockerfile`は、そのイメージに不足しているパッケージ
-(`ruby-dev`、`libssl-dev`)を追加するだけのものです。ビルド系のタスクは、初回実行時に
-このイメージを自動的にビルドします。ホスト側に必要なのはDockerと(`rake`を実行するための)
-Rubyだけです。
+ビルドは公式の[`espressif/idf`](https://hub.docker.com/r/espressif/idf)イメージを
+ベースにしたコンテナ内で行われるため、ESP-IDFをホストにインストールする必要はありません。
+ホスト側で用意するのは**Docker**と**Ruby(3.2以降、`rake`の実行用)**だけです。
 
-各タスクは、対応する`native:`タスクをコンテナ内で実行します(例: `rake setup_esp32s3`は
-`rake native:setup_esp32s3`を、`rake picoruby:build`は`rake native:picoruby:build`を実行)。
-そのため、ネイティブビルドと同じように動作します。`rake docker:shell`でコンテナ内の
-シェルを開くこともできます。
+### 1. DockerとRubyを用意する
+
+Docker(Linuxでは Docker Engine、macOSでは Docker Desktop / Rancher Desktop / Colima など)と
+Rubyをインストールし、動作を確認します。
+
+```sh
+$ docker run --rm hello-world   # "Hello from Docker!" と表示されればOK
+$ ruby --version                # 3.2以降
+```
+
+macOSの場合は、続けて下記の「macOS: virtiofsを有効にする」を行ってください。
+
+### 2. あとは通常どおり`rake`タスクを実行する
+
+追加の準備は不要です。[ターゲットのセットアップ](../target-setup/)や[ビルド](../build/)の
+`rake`タスクを初めて実行したときに、Dockerイメージ(`docker/Dockerfile`)が自動でビルドされます。
+各タスクはコンテナ内で対応する`native:`タスクを実行します
+(例: `rake setup_esp32s3` → `rake native:setup_esp32s3`)。
+
+コンテナ内のシェルで作業したい場合は次のコマンドを使います。
+
+```sh
+$ rake docker:shell
+```
 
 ### macOS: virtiofsを有効にする
 
-プロジェクトディレクトリはコンテナにバインドマウントされるため、Dockerのファイル共有
-バックエンドがシンボリックリンクを正しく扱える必要があります。ビルドは
-`components/picoruby-esp32/picoruby`以下にベンダリングされたシンボリックリンクを通じて
-ファイルの読み書きを行います。
+macOSでは、Dockerのファイル共有方式を**virtiofs**にする必要があります。それ以外の方式
+(`gRPC FUSE` / `osxfs` / `reverse-sshfs` / `9p`)ではシンボリックリンクを正しく扱えず、
+ビルドが`Operation not permitted`エラーで失敗します。お使いのツールに応じて以下を行ってください。
 
-**macOSでは`virtiofs`を有効にする必要があります。** それ以外のバックエンド
-(Docker Desktopの`gRPC FUSE` / `osxfs`、Rancher Desktopの`reverse-sshfs` / `9p`)では
-`Operation not permitted`エラーが発生します。
+**Docker Desktop**
+
+1. Docker Desktopの **Settings** → **General** を開く
+2. **Virtual Machine Manager** で **Apple Virtualization framework** を選択する
+3. ファイル共有方式(**Choose file sharing implementation for your containers**)で **VirtioFS** を選択する
+4. **Apply & restart** をクリックする
+
+**Rancher Desktop**
+
+1. **Preferences** → **Virtual Machine** → **Emulation** で **VZ** を選択する
+2. **Preferences** → **Virtual Machine** → **Volumes** で **Mount Type** を **virtiofs** にする
+3. **Apply** をクリックする(VMが再起動します)
+
+**Colima**
+
+VMを作り直す必要があります(既存のコンテナ・イメージは削除されます)。
+
+```sh
+$ colima delete
+$ colima start --vm-type vz --mount-type virtiofs
+```
 
 ### ESP-IDFバージョンの指定
 

@@ -17,29 +17,65 @@ Docker by default. To build on the host with ESP-IDF instead, use their
 
 ## Using Docker (default)
 
-Instead of installing ESP-IDF and a host toolchain on your machine, the
-build runs inside a container based on the official
-[`espressif/idf`](https://hub.docker.com/r/espressif/idf) image, which
-already bundles ESP-IDF, `gcc`, and `ruby`. The project's `docker/Dockerfile`
-layers on the few packages that image is missing (`ruby-dev`, `libssl-dev`).
-The build tasks build this image automatically the first time you use them —
-all you need on the host is Docker and Ruby (to run `rake`).
+The build runs inside a container based on the official
+[`espressif/idf`](https://hub.docker.com/r/espressif/idf) image, so you don't
+need ESP-IDF on your machine. All you need on the host is **Docker** and
+**Ruby (3.2 or later, to run `rake`)**.
 
-Each task runs its `native:` counterpart inside the container (e.g.
-`rake setup_esp32s3` runs `rake native:setup_esp32s3`, `rake picoruby:build`
-runs `rake native:picoruby:build`), so it behaves just like the native
-build. `rake docker:shell` opens an ad-hoc shell in the container.
+### 1. Install Docker and Ruby
+
+Install Docker (Docker Engine on Linux; Docker Desktop, Rancher Desktop,
+Colima, etc. on macOS) and Ruby, then check that both work:
+
+```sh
+$ docker run --rm hello-world   # should print "Hello from Docker!"
+$ ruby --version                # 3.2 or later
+```
+
+On macOS, continue with [macOS: enable virtiofs](#macos-enable-virtiofs) below.
+
+### 2. Run the `rake` tasks as usual
+
+Nothing else to prepare. The first time you run a `rake` task from
+[Target Setup](../target-setup/) or [Build](../build/), the Docker image
+(`docker/Dockerfile`) is built automatically. Each task runs its `native:`
+counterpart inside the container (e.g. `rake setup_esp32s3` →
+`rake native:setup_esp32s3`).
+
+To work in a shell inside the container:
+
+```sh
+$ rake docker:shell
+```
 
 ### macOS: enable virtiofs
 
-The project directory is bind-mounted into the container, so your Docker
-file-sharing backend needs to handle symlinks correctly — the build reads
-and creates files through symlinks vendored under
-`components/picoruby-esp32/picoruby`.
+On macOS, Docker's file-sharing backend must be **virtiofs**. Other backends
+(`gRPC FUSE` / `osxfs` / `reverse-sshfs` / `9p`) don't handle symlinks
+correctly and the build fails with `Operation not permitted`. Depending on
+the tool you use:
 
-**On macOS, `virtiofs` must be enabled.** Other backends (Docker Desktop's
-`gRPC FUSE` / `osxfs`, Rancher Desktop's `reverse-sshfs` / `9p`) fail with
-`Operation not permitted`.
+**Docker Desktop**
+
+1. Open Docker Desktop's **Settings** → **General**
+2. Under **Virtual Machine Manager**, select **Apple Virtualization framework**
+3. Under **Choose file sharing implementation for your containers**, select **VirtioFS**
+4. Click **Apply & restart**
+
+**Rancher Desktop**
+
+1. In **Preferences** → **Virtual Machine** → **Emulation**, select **VZ**
+2. In **Preferences** → **Virtual Machine** → **Volumes**, set **Mount Type** to **virtiofs**
+3. Click **Apply** (the VM restarts)
+
+**Colima**
+
+The VM has to be recreated (existing containers and images are deleted):
+
+```sh
+$ colima delete
+$ colima start --vm-type vz --mount-type virtiofs
+```
 
 ### Choosing an ESP-IDF version
 
