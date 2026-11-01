@@ -9,8 +9,10 @@ Flash the built image to your device:
 $ rake flash
 ```
 
-This calls `esptool` directly, reading target/offsets from
-`build/project_description.json` and `build/flash_args` (both written by
+This runs on the host with the [esp_flash](https://rubygems.org/gems/esp_flash)
+gem (install it with `bundle install`, see
+[Environment Setup](../environment-setup/)), reading target/offsets from
+`build/project_description.json` and `build/flasher_args.json` (both written by
 `idf.py build`), so it always matches whatever target and VM you last built
 — see [Settings](../settings/) and [Build](../build/).
 

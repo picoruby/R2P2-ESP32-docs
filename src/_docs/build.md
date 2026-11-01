@@ -1,13 +1,13 @@
 ---
 title: Build
-description: Build R2P2-ESP32 with PicoRuby or FemtoRuby, using ESP-IDF or Docker.
+description: Build R2P2-ESP32 with PicoRuby or FemtoRuby, in Docker or natively with ESP-IDF.
 ---
 
 Once [Target Setup](../target-setup/) is done, build with whichever VM you
 want — both are available regardless of which [environment
 setup](../environment-setup/) path you took.
 
-## Using ESP-IDF
+## Using Docker (default)
 
 ### PicoRuby
 
@@ -28,23 +28,26 @@ $ rake femtoruby:build
 Equivalent to `rake build -DPICORB_VM=mruby/c`, selecting the
 `*-esp-femtoruby.rb` build config.
 
-## Using Docker
-
-### PicoRuby
+### Build, flash and monitor in one go
 
 ```sh
-$ rake docker:picoruby:build
+$ rake   # same as rake all
 ```
 
-### FemtoRuby
+builds in Docker, then [flashes](../flashing/) and
+[monitors](../monitoring/) from the host.
+
+## Building natively
+
+Prefix the same tasks with `native:`:
 
 ```sh
-$ rake docker:femtoruby:build
+$ rake native:picoruby:build
+$ rake native:femtoruby:build
+$ rake native:all   # build natively, flash and monitor
 ```
 
 ## Cleaning
-
-### Using ESP-IDF
 
 ```sh
 $ rake clean       # idf.py clean, plus mruby clean for all 4 build_config combinations
@@ -52,14 +55,8 @@ $ rake deep_clean  # clean, plus idf.py fullclean and removing mruby's build/rep
 ```
 
 Reach for `deep_clean` if you switch targets or VMs and hit stale-build
-errors that a plain `clean` doesn't fix.
-
-### Using Docker
-
-```sh
-$ rake docker:clean
-$ rake docker:deep_clean
-```
+errors that a plain `clean` doesn't fix. When building natively, use
+`rake native:clean` / `rake native:deep_clean` instead.
 
 ## Next steps
 

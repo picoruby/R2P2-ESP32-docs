@@ -1,13 +1,13 @@
 ---
 title: ビルド
-description: ESP-IDFまたはDockerを使い、PicoRubyまたはFemtoRubyでR2P2-ESP32をビルドします。
+description: Docker、またはESP-IDFを使ったネイティブ環境で、PicoRubyまたはFemtoRubyでR2P2-ESP32をビルドします。
 ---
 
 [ターゲットのセットアップ](../target-setup/)が終わったら、好きなVMでビルドします。
 [環境構築](../environment-setup/)でどちらの方法を選んでいても、どちらのVMも
 利用できます。
 
-## ESP-IDFを使う場合
+## Dockerを使う場合(デフォルト)
 
 ### PicoRuby
 
@@ -28,23 +28,26 @@ $ rake femtoruby:build
 これは`rake build -DPICORB_VM=mruby/c`と同等で、`*-esp-femtoruby.rb`の
 ビルド設定を選択します。
 
-## Dockerを使う場合
-
-### PicoRuby
+### ビルド・フラッシュ・モニタリングをまとめて実行する
 
 ```sh
-$ rake docker:picoruby:build
+$ rake   # rake all と同じ
 ```
 
-### FemtoRuby
+Docker上でビルドしたあと、ホスト側から[フラッシュ](../flashing/)と
+[モニタリング](../monitoring/)を行います。
+
+## ネイティブでビルドする場合
+
+同じタスクに`native:`を付けて実行します。
 
 ```sh
-$ rake docker:femtoruby:build
+$ rake native:picoruby:build
+$ rake native:femtoruby:build
+$ rake native:all   # ネイティブでビルドし、フラッシュとモニタリングまで実行
 ```
 
 ## クリーンアップ
-
-### ESP-IDFを使う場合
 
 ```sh
 $ rake clean       # idf.py clean に加え、4つのbuild_configすべてでmruby cleanを実行
@@ -52,14 +55,8 @@ $ rake deep_clean  # cleanに加え、idf.py fullcleanとmrubyのbuild/repos/esp
 ```
 
 ターゲットやVMを切り替えて、通常の`clean`では直らない古いビルドに起因するエラーが
-出た場合は`deep_clean`を試してください。
-
-### Dockerを使う場合
-
-```sh
-$ rake docker:clean
-$ rake docker:deep_clean
-```
+出た場合は`deep_clean`を試してください。ネイティブでビルドしている場合は、
+`rake native:clean` / `rake native:deep_clean`を使います。
 
 ## 次のステップ
 

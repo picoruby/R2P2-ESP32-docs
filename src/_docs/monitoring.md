@@ -9,8 +9,8 @@ Open a serial terminal connected to your device:
 $ rake monitor
 ```
 
-This calls `esp-idf-monitor` directly (falling back to the `idf-monitor`
-executable if the `esp_idf_monitor` Python module isn't importable), reading
+Like `rake flash`, this runs on the host with the
+[esp_flash](https://rubygems.org/gems/esp_flash) gem (`bundle install`), reading
 the baud rate and ELF path for symbolicated backtraces from
 `build/project_description.json` — so, like `rake flash`, it always matches
 your last build.

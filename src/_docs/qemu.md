@@ -5,9 +5,11 @@ description: Run R2P2-ESP32 on QEMU (ESP32-S3), without any real hardware.
 
 R2P2-ESP32 can run under [QEMU](https://github.com/espressif/qemu) targeting
 ESP32-S3, without any real hardware. This uses ESP-IDF's built-in `idf.py
-qemu` support and the `qemu-xtensa` tool package.
+qemu` support and the `qemu-xtensa` tool package, both of which the Docker
+image already has (for the `native:` tasks, run `idf_tools.py install
+qemu-xtensa`).
 
-## Using ESP-IDF
+## Using Docker (default)
 
 Set up a separate build directory (`build-qemu`) once, targeting ESP32-S3
 with a UART console (QEMU does not emulate the USB Serial/JTAG console):
@@ -27,14 +29,20 @@ $ rake qemu           # whichever VM is currently configured in build-qemu (defa
 This drops you into the `picoruby-shell` prompt over the emulated UART. Use
 `Ctrl-A X` to quit QEMU (`-nographic` mode).
 
-## Using Docker
+To expose the UART on a TCP port instead of the terminal (used by the
+[MCP server](../mcp-server/)), run `rake qemu_serve` (add `picoruby:` /
+`femtoruby:` to pick the VM) and connect to `127.0.0.1:5555`
+(`QEMU_SERIAL_PORT` changes it), e.g. with `nc 127.0.0.1 5555`. It starts
+from a fresh `storage` image every time and stops with Ctrl-C.
 
-If you set up your environment [with Docker](../environment-setup/)
-instead, the equivalent tasks are namespaced under `docker:`:
+## Building natively
+
+If you [build natively](../environment-setup/) with ESP-IDF, the
+equivalent tasks are namespaced under `native:`:
 
 ```sh
-$ rake docker:setup_qemu
-$ rake docker:femtoruby:qemu   # or docker:picoruby:qemu, docker:qemu
+$ rake native:setup_qemu
+$ rake native:femtoruby:qemu   # or native:picoruby:qemu, native:qemu, native:qemu_serve
 ```
 
 ## Known limitations

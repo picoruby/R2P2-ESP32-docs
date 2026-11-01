@@ -106,7 +106,7 @@ ja:
           description: R2P2-ESP32とは何か、数分で動かす方法。
           href: /docs/introduction/
         - title: 自分でビルドする
-          description: ESP-IDFの準備、設定、独自ファームウェアのビルド。
+          description: DockerまたはESP-IDFの準備、設定、独自ファームウェアのビルド。
           href: /docs/why-build/
         - title: 動かす
           description: ボードへの書き込み、モニタリング、デバッグ。

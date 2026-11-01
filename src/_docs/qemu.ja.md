@@ -5,9 +5,11 @@ description: 実機なしで、QEMU(ESP32-S3)上でR2P2-ESP32を動作させま�
 
 R2P2-ESP32は、実機がなくても[QEMU](https://github.com/espressif/qemu)上で
 ESP32-S3をターゲットに動作させることができます。これにはESP-IDF組み込みの
-`idf.py qemu`サポートと、`qemu-xtensa`ツールパッケージを使用します。
+`idf.py qemu`サポートと、`qemu-xtensa`ツールパッケージを使用します。どちらもDocker
+イメージにはすでに含まれています(`native:`タスクを使う場合は
+`idf_tools.py install qemu-xtensa`を実行してください)。
 
-## ESP-IDFを使う場合
+## Dockerを使う場合(デフォルト)
 
 専用のビルドディレクトリ(`build-qemu`)を一度だけセットアップします。UARTコンソール
 付きのESP32-S3をターゲットにします(QEMUはUSB Serial/JTAGコンソールをエミュレート
@@ -28,14 +30,19 @@ $ rake qemu           # build-qemuに現在設定されているVM(デフォル�
 これでエミュレートされたUART上の`picoruby-shell`プロンプトに入ります。QEMUの終了は
 `Ctrl-A X`です(`-nographic`モード)。
 
-## Dockerを使う場合
+UARTを端末ではなくTCPポートに公開したい場合([MCPサーバー](../mcp-server/)が使用)は、
+`rake qemu_serve`を実行し(VMを選ぶには`picoruby:` / `femtoruby:`を付けます)、
+`127.0.0.1:5555`(`QEMU_SERIAL_PORT`で変更可能)に`nc 127.0.0.1 5555`などで接続します。
+毎回新しい`storage`イメージから起動し、Ctrl-Cで停止します。
 
-[環境構築](../environment-setup/)でDockerを使っている場合は、`docker:`名前空間の下に
-同等のタスクがあります。
+## ネイティブでビルドする場合
+
+ESP-IDFを使って[ネイティブでビルド](../environment-setup/)している場合は、
+`native:`名前空間の下に同等のタスクがあります。
 
 ```sh
-$ rake docker:setup_qemu
-$ rake docker:femtoruby:qemu   # または docker:picoruby:qemu, docker:qemu
+$ rake native:setup_qemu
+$ rake native:femtoruby:qemu   # または native:picoruby:qemu, native:qemu, native:qemu_serve
 ```
 
 ## 既知の制限事項

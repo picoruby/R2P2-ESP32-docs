@@ -1,6 +1,6 @@
 ---
 title: Environment Setup
-description: Set up ESP-IDF locally, or use Docker instead — pick whichever fits your setup.
+description: Build in Docker (the default), or set up ESP-IDF locally to build natively — pick whichever fits your setup.
 ---
 
 Either way, start by cloning the repository together with its submodules:
@@ -10,7 +10,79 @@ $ git clone --recursive https://github.com/picoruby/R2P2-ESP32.git
 $ cd R2P2-ESP32
 ```
 
-## Using ESP-IDF
+The build tasks (`setup_*`, `build`, `clean`, the QEMU tasks, ...) run in
+Docker by default. To build on the host with ESP-IDF instead, use their
+`native:` counterparts (e.g. `rake native:build`) — see
+[Building natively](#building-natively).
+
+## Using Docker (default)
+
+Instead of installing ESP-IDF and a host toolchain on your machine, the
+build runs inside a container based on the official
+[`espressif/idf`](https://hub.docker.com/r/espressif/idf) image, which
+already bundles ESP-IDF, `gcc`, and `ruby`. The project's `docker/Dockerfile`
+layers on the few packages that image is missing (`ruby-dev`, `libssl-dev`).
+The build tasks build this image automatically the first time you use them —
+all you need on the host is Docker and Ruby (to run `rake`).
+
+Each task runs its `native:` counterpart inside the container (e.g.
+`rake setup_esp32s3` runs `rake native:setup_esp32s3`, `rake picoruby:build`
+runs `rake native:picoruby:build`), so it behaves just like the native
+build. `rake docker:shell` opens an ad-hoc shell in the container.
+
+### macOS: enable virtiofs
+
+The project directory is bind-mounted into the container, so your Docker
+file-sharing backend needs to handle symlinks correctly — the build reads
+and creates files through symlinks vendored under
+`components/picoruby-esp32/picoruby`.
+
+**On macOS, `virtiofs` must be enabled.** Other backends (Docker Desktop's
+`gRPC FUSE` / `osxfs`, Rancher Desktop's `reverse-sshfs` / `9p`) fail with
+`Operation not permitted`.
+
+### Choosing an ESP-IDF version
+
+To use a different ESP-IDF patch version than the pinned default
+(`v5.5.4`, see `DOCKER_IDF_TAG` in `rakelib/docker.rake`), set
+`ESP_IDF_DOCKER_TAG` to any tag from the
+[image's tag list](https://hub.docker.com/r/espressif/idf/tags):
+
+```sh
+$ export ESP_IDF_DOCKER_TAG=v5.5.5
+$ rake build
+```
+
+### Configuration via `.env`
+
+Unlike the native build, the Docker tasks only forward `SDKCONFIG_DEFAULTS`
+and `USE_WIFI` from your shell (when set). For any other variable — or to
+keep them out of your shell — put them in a gitignored `.env` file at the
+project root instead; it's passed to the container as-is if present.
+Docker's `--env-file` format doesn't strip quotes the way a shell does, so
+**don't quote the value**:
+
+```sh
+# .env
+SDKCONFIG_DEFAULTS=sdkconfig.defaults;sdkconfigs/usb_console
+```
+
+See [Settings](../settings/) for what goes in `SDKCONFIG_DEFAULTS`.
+
+> **Note:** `rake flash` / `rake monitor` always run on the host, not in the
+> container, because most container setups (Docker Desktop, Rancher Desktop
+> on macOS/Windows) can't pass the device's serial port through to the
+> container — it's not a Dockerfile/CLI-flag issue, the port simply isn't
+> visible inside their Linux VM. They [flash and monitor](../flashing/) the
+> image built by `rake build` from the host, and don't need a full ESP-IDF
+> install either (see below). On native Linux, `docker run
+> --device=/dev/ttyUSB0 ...` can pass a serial device through if you want to
+> flash from inside a container (`rake docker:shell`) too.
+
+## Building natively
+
+To build on the host with a local ESP-IDF instead of Docker, use the
+`native:` tasks (`rake native:setup_esp32s3`, `rake native:build`, ...).
 
 ### Prerequisites
 
@@ -50,79 +122,21 @@ $ rbenv local 4.0.5
 > the wrong compiler, override it with the `HOST_CC` / `HOST_AR`
 > environment variables.
 
-## Using Docker
+## Installing the gems for flashing
 
-Instead of installing ESP-IDF, Ruby, and a host toolchain on your machine,
-you can build entirely inside a container based on the official
-[`espressif/idf`](https://hub.docker.com/r/espressif/idf) image, which
-already bundles ESP-IDF, `gcc`, and `ruby`. The project's `docker/Dockerfile`
-layers on the few packages that image is missing (`ruby-dev`, `libssl-dev`).
-`rake docker:*` tasks build this image automatically the first time you use
-them — all you need on the host is Docker itself.
-
-### macOS: enable virtiofs
-
-The project directory is bind-mounted into the container, so your Docker
-file-sharing backend needs to handle symlinks correctly — the build reads
-and creates files through symlinks vendored under
-`components/picoruby-esp32/picoruby`.
-
-**On macOS, `virtiofs` must be enabled.** Other backends (Docker Desktop's
-`gRPC FUSE` / `osxfs`, Rancher Desktop's `reverse-sshfs` / `9p`) fail with
-`Operation not permitted`.
-
-### Choosing an ESP-IDF version
-
-To use a different ESP-IDF patch version than the pinned default
-(`v5.5.4`, see `DOCKER_IDF_TAG` in `rakelib/docker.rake`), set
-`ESP_IDF_DOCKER_TAG` to any tag from the
-[image's tag list](https://hub.docker.com/r/espressif/idf/tags):
+Whichever way you build, `rake flash` / `rake monitor` (see
+[Flashing](../flashing/)) run on the host. They are implemented in plain
+Ruby by the [esp_flash](https://rubygems.org/gems/esp_flash) gem, so besides
+the Ruby (3.2 or later) that runs `rake` they need nothing else — no
+ESP-IDF, Python, or esptool — and they work with a `build/` produced by
+Docker too. Install the gems declared in the repository's `Gemfile` once:
 
 ```sh
-$ export ESP_IDF_DOCKER_TAG=v5.5.5
-$ rake docker:build
-```
-
-### Configuration via `.env`
-
-Unlike the native build, `docker:*` tasks don't read `SDKCONFIG_DEFAULTS`,
-`USE_WIFI`, etc. from your shell environment. Put them in a gitignored
-`.env` file at the project root instead — it's passed to the container
-as-is if present. Docker's `--env-file` format doesn't strip quotes the way
-a shell does, so **don't quote the value**:
-
-```sh
-# .env
-SDKCONFIG_DEFAULTS=sdkconfig.defaults;sdkconfigs/usb_console
-```
-
-See [Settings](../settings/) for what goes in `SDKCONFIG_DEFAULTS`.
-
-> **Note:** There's no `docker:flash` / `docker:monitor` task, because most
-> container setups (Docker Desktop, Rancher Desktop on macOS/Windows) can't
-> pass the device's serial port through to the container — it's not a
-> Dockerfile/CLI-flag issue, the port simply isn't visible inside their
-> Linux VM. [Flash and monitor](../flashing/) the image built by
-> `docker:build` from the host instead — that doesn't need a full ESP-IDF
-> install either. On native Linux, `docker run --device=/dev/ttyUSB0 ...`
-> can pass a serial device through if you want to flash from inside a
-> container too.
-
-### Installing the necessary tools
-
-Flashing and monitoring that host-side doesn't need a full ESP-IDF install
-either. `rake flash` / `rake monitor` (see
-[Flash and Monitor](../flashing/)) call `esptool` / `esp-idf-monitor`
-directly rather than `idf.py`, so a `build/` produced by Docker works from
-a host with just these two Python packages:
-
-```sh
-$ pip install esptool esp-idf-monitor
+$ bundle install
 ```
 
 That's it — no ESP-IDF activation required for flashing/monitoring alone.
-(If you built with ESP-IDF directly, you already have these as part of
-that install.)
+They run on Linux and macOS; Windows support is untested.
 
 ## Next steps
 

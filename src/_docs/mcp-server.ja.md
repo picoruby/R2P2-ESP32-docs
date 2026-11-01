@@ -21,8 +21,9 @@ R2P2-ESP32リポジトリには[MCP](https://modelcontextprotocol.io/)サーバ�
 
 ## インストール
 
+gemはリポジトリ直下の`Gemfile`で宣言されているため、リポジトリ直下で実行します。
+
 ```sh
-$ cd mcp
 $ bundle install
 ```
 
@@ -60,7 +61,8 @@ $ claude mcp add r2p2-esp32 -- /path/to/R2P2-ESP32/mcp/bin/r2p2-esp32-mcp
 `setup`、`build`、`clean`、`flash`はrakeタスクをジョブとして実行し、**完了を待ちます**
 (`timeout`、デフォルト300秒。`0`なら即座に戻ります)。それより長くかかる場合はジョブは
 動き続け、その旨が返るので、`job_wait`で待ってください。同時に実行できるジョブは1つ
-だけです。`native: true`を渡さない限り、すべてDocker(`rake docker:*`)で実行されます。
+だけです。`native: true`を渡さない限り、すべてDocker(デフォルトのrakeタスク)で実行されます。
+`native: true`の場合は`native:`タスクを実行します。
 
 | ツール | 引数 | 内容 |
 |--------|------|------|
@@ -89,7 +91,7 @@ $ claude mcp add r2p2-esp32 -- /path/to/R2P2-ESP32/mcp/bin/r2p2-esp32-mcp
 
 ファイル転送には、シェルがプロンプト状態であること(`irb`内ではない)と、`setup`で
 ビルドされたホスト用`picoruby`が必要です。macOSでは、Dockerのみのビルドだとここに
-Linux用バイナリが残るため、一度ネイティブで`rake setup_<target>`を実行してください。
+Linux用バイナリが残るため、一度`rake native:setup_<target>`を実行してください。
 
 ### QEMU系ツール
 

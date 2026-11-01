@@ -28,9 +28,9 @@ Set this **before** running [Target Setup](../target-setup/) — it's only
 read while ESP-IDF configures the project. If you change it later, re-run
 Target Setup (e.g. `rake setup_esp32`) to force a fresh configure.
 
-Using Docker instead? `docker:*` tasks don't read this from your shell; put
-it in a gitignored `.env` file at the project root instead (see
-[Environment Setup](../environment-setup/)).
+The Docker tasks (the default) forward `SDKCONFIG_DEFAULTS` from your shell
+too; you can also put it in a gitignored `.env` file at the project root
+instead (see [Environment Setup](../environment-setup/)).
 
 ## The PicoRuby/FemtoRuby build config (`build_config/`)
 
