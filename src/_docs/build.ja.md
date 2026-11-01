@@ -28,15 +28,6 @@ $ rake femtoruby:build
 これは`rake build -DPICORB_VM=mruby/c`と同等で、`*-esp-femtoruby.rb`の
 ビルド設定を選択します。
 
-### ビルド・フラッシュ・モニタリングをまとめて実行する
-
-```sh
-$ rake   # rake all と同じ
-```
-
-Docker上でビルドしたあと、ホスト側から[フラッシュ](../flashing/)と
-[モニタリング](../monitoring/)を行います。
-
 ## ネイティブでビルドする場合
 
 同じタスクに`native:`を付けて実行します。
@@ -44,7 +35,6 @@ Docker上でビルドしたあと、ホスト側から[フラッシュ](../flash
 ```sh
 $ rake native:picoruby:build
 $ rake native:femtoruby:build
-$ rake native:all   # ネイティブでビルドし、フラッシュとモニタリングまで実行
 ```
 
 ## クリーンアップ

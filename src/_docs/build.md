@@ -28,15 +28,6 @@ $ rake femtoruby:build
 Equivalent to `rake build -DPICORB_VM=mruby/c`, selecting the
 `*-esp-femtoruby.rb` build config.
 
-### Build, flash and monitor in one go
-
-```sh
-$ rake   # same as rake all
-```
-
-builds in Docker, then [flashes](../flashing/) and
-[monitors](../monitoring/) from the host.
-
 ## Building natively
 
 Prefix the same tasks with `native:`:
@@ -44,7 +35,6 @@ Prefix the same tasks with `native:`:
 ```sh
 $ rake native:picoruby:build
 $ rake native:femtoruby:build
-$ rake native:all   # build natively, flash and monitor
 ```
 
 ## Cleaning
